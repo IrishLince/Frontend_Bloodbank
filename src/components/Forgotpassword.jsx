@@ -3,7 +3,7 @@ import { IoArrowBack } from "react-icons/io5";
 import flagLogo from '../assets/Logophonenumber.png';
 import cover from '../assets/cover.png';
 
-const ForgotPassword = ({ setIsLogin }) => {
+const ForgotPassword = ({ setIsLogin, setIsForgotPassword }) => {
   const [step, setStep] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -19,7 +19,7 @@ const ForgotPassword = ({ setIsLogin }) => {
     }
     if (countdown === 0) {
       setCanResend(true);
-      setCountdown(30);
+      setCountdown(60);
     }
     return () => clearInterval(timer);
   }, [canResend, countdown]);
@@ -27,13 +27,13 @@ const ForgotPassword = ({ setIsLogin }) => {
   const handleSendCode = (e) => {
     e.preventDefault();
     setStep(3);
-    setCanResend(false);
+    // Add logic to send the verification code
   };
 
   const handleResendCode = () => {
     if (canResend) {
       setCanResend(false);
-      setCountdown(30);
+      setCountdown(60); // Reset countdown for the next resend
       // Add your resend code logic here
     }
   };
@@ -54,7 +54,14 @@ const ForgotPassword = ({ setIsLogin }) => {
     <div className="min-h-screen w-full flex items-center justify-center" style={backgroundStyle}>
       <div className="w-full max-w-md p-6 bg-pink-50 rounded-3xl shadow-xl mx-4">
         <button 
-          onClick={() => step === 1 ? setIsLogin(true) : setStep(prev => prev - 1)} 
+          onClick={() => {
+            if (step === 3) {
+              setStep(1); // Go back to the Forgot Password step
+            } else {
+              setIsLogin(true); // Navigate back to Login
+              setIsForgotPassword(false); // Reset forgot password state
+            }
+          }} 
           className="text-gray-800 mb-6 flex items-center"
         >
           <IoArrowBack size={24} />
@@ -79,10 +86,12 @@ const ForgotPassword = ({ setIsLogin }) => {
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   placeholder="Enter verification code"
                 />
+              </div>
+              {!canResend && (
                 <p className="text-sm text-gray-600 mt-2">
                   You can request a new code in {countdown} seconds.
                 </p>
-              </div>
+              )}
               <button
                 type="submit"
                 className="w-full bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 transition-colors"
@@ -90,6 +99,13 @@ const ForgotPassword = ({ setIsLogin }) => {
                 VERIFY CODE
               </button>
             </form>
+            <button
+              onClick={handleResendCode}
+              className={`w-full text-center mt-4 text-sm ${canResend ? 'text-red-600 hover:text-red-700' : 'text-gray-400'}`}
+              disabled={!canResend}
+            >
+              <span className="text-red-600">Didn't receive the code?</span> <strong className={`${canResend ? 'text-red-600' : 'text-gray-400'}`}>Resend Code.</strong>
+            </button>
           </>
         ) : (
           <>
@@ -125,16 +141,6 @@ const ForgotPassword = ({ setIsLogin }) => {
             </form>
           </>
         )}
-
-        <button
-          onClick={handleResendCode}
-          className={`w-full text-center mt-4 text-sm ${
-            canResend ? 'text-red-600 hover:text-red-700' : 'text-gray-400'
-          }`}
-          disabled={!canResend}
-        >
-          Didn't receive the code? Resend Code.
-        </button>
       </div>
     </div>
   );

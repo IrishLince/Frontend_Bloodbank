@@ -4,7 +4,7 @@ import { RiLockPasswordLine, RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import LogoSignup from '../assets/LogoSignup.png';
 import coverLogin from '../assets/cover.png';
 
-const Login = ({ setIsLogin }) => {
+const Login = ({ setIsLogin, setIsForgotPassword }) => { // Ensure setIsForgotPassword is received as a prop
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
@@ -59,7 +59,7 @@ const Login = ({ setIsLogin }) => {
             <button
               type="button"
               className="text-sm text-red-600 hover:text-red-700"
-              onClick={() => {/* Handle forgot password */}}
+              onClick={() => setIsForgotPassword(true)} // This should work now
             >
               Forgot your password?
             </button>
