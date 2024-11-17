@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
-import backgroundImage from '../assets/cover.png'
-import flagLogo from '../assets/Logophonenumber.png'
-import LogoSignup from '../assets/LogoSignup.png'
+import React, { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import flagLogo from '../assets/Logophonenumber.png';
+import LogoSignup from '../assets/LogoSignup.png';
+import { useNavigate } from 'react-router-dom';
+import Background from './Background'; // import Background component
+import backgroundImage from '../assets/cover.png'; // path to background image
 
-export default function Signup({ setIsLogin }: { setIsLogin: (value: boolean) => void }) {
+interface SignupProps {
+  setIsLogin: (value: boolean) => void;
+}
+
+export default function Signup({ setIsLogin }: SignupProps) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
@@ -14,38 +21,35 @@ export default function Signup({ setIsLogin }: { setIsLogin: (value: boolean) =>
     password: '',
     dateOfBirth: '',
     gender: ''
-  })
+  });
 
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev)
-  }
+    setShowPassword((prev) => !prev);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log(formData)
-    // Handle form submission
-  }
+    e.preventDefault();
+    console.log(formData);
+    // Handle form submission (e.g., send to server)
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value
-    }))
-  }
+    }));
+  };
 
   return (
-    <div 
-      className="min-h-screen w-full bg-cover justify-center bg-no-repeat flex flex-col"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="flex items-center justify-center">
-        <img src={LogoSignup} alt="BloodBank Logo" className="mx-auto w-32 h-32 mt-5" />
+    <Background>
+      <div className="flex items-center justify-center mb-8">
+        <img src={LogoSignup} alt="BloodBank Logo" className="mx-auto w-32 h-32" />
       </div>
-      <div className="flex-1 flex items-center justify-center">
-        <form onSubmit={handleSubmit} className="w-full max-w-4xl">
+      <div className="flex-1 flex items-center justify-center w-full">
+        <form onSubmit={handleSubmit} className="w-full max-w-4xl p-4 bg-white rounded-lg shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Full Name */}
             <div>
@@ -143,7 +147,8 @@ export default function Signup({ setIsLogin }: { setIsLogin: (value: boolean) =>
                   value={formData.phoneNumber}
                   onChange={handleChange}
                   className="flex-1 p-3 rounded-r-lg border shadow-lg border-gray-300 bg-white text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none"
-                  placeholder=""
+                  placeholder="Enter phone number"
+                  maxLength={10}
                 />
               </div>
             </div>
@@ -155,7 +160,7 @@ export default function Signup({ setIsLogin }: { setIsLogin: (value: boolean) =>
               </label>
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   value={formData.password}
@@ -185,7 +190,6 @@ export default function Signup({ setIsLogin }: { setIsLogin: (value: boolean) =>
                 value={formData.dateOfBirth}
                 onChange={handleChange}
                 className="w-full p-3 rounded-lg border shadow-lg border-gray-300 bg-white text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none"
-                placeholder="26/04/1995"
               />
             </div>
 
@@ -219,29 +223,30 @@ export default function Signup({ setIsLogin }: { setIsLogin: (value: boolean) =>
                 </div>
               </div>
             </div>
-            {/* Buttons - spanning full width */}
-            <div className="col-span-full">
-            <div className="flex justify-center space-x-4">
-              <button
-                type="button"
-                onClick={() => setIsLogin(true)}
-                className="bg-red-600 text-white px-6 py-1.5 rounded-full text-xs font-medium 
-                  hover:bg-red-700 transition-colors duration-200 w-24"
-              >
-                Return
-              </button>
+
+            {/* Submit Button */}
+            <div className="col-span-full flex flex-col items-center mt-6">
               <button
                 type="submit"
-                className="bg-red-600 text-white px-6 py-1.5 rounded-full text-xs font-medium 
-                  hover:bg-red-700 transition-colors duration-200 w-24"
+                className="w-full sm:w-auto px-8 py-3 bg-red-600 text-white rounded-full text-sm font-semibold hover:bg-red-700 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 shadow-lg hover:shadow-xl"
               >
                 REGISTER
+              </button>
+
+              <p className="mt-4 text-sm text-gray-600">
+                Already have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  className="text-red-600 hover:text-red-700 font-medium transition-colors duration-200"
+                >
+                  Login here
                 </button>
-              </div>
+              </p>
             </div>
           </div>
         </form>
       </div>
-    </div>
-  )
+    </Background>
+  );
 }

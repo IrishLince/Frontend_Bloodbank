@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { IoArrowBack } from "react-icons/io5";
 import flagLogo from '../assets/Logophonenumber.png';
 import cover from '../assets/cover.png';
+import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = ({ setIsLogin, setIsForgotPassword }) => {
   const [step, setStep] = useState(1);
+  const navigate = useNavigate(); 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [countdown, setCountdown] = useState(30);
@@ -14,7 +16,7 @@ const ForgotPassword = ({ setIsLogin, setIsForgotPassword }) => {
     let timer;
     if (!canResend && countdown > 0) {
       timer = setInterval(() => {
-        setCountdown(prev => prev - 1);
+        setCountdown((prev) => prev - 1);
       }, 1000);
     }
     if (countdown === 0) {
@@ -43,26 +45,30 @@ const ForgotPassword = ({ setIsLogin, setIsForgotPassword }) => {
     // Add your verification logic here
   };
 
+  const handleBack = () => {
+    if (step > 1) {
+      // If we're beyond step 1, go back one step
+      setStep(step - 1);
+    } else {
+      // If we're on step 1, navigate back to login
+      navigate('/login'); // Use navigate function directly
+    }
+  };
+
   const backgroundStyle = {
     backgroundImage: `url(${cover})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
+    backgroundRepeat: 'no-repeat',
   };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center" style={backgroundStyle}>
       <div className="w-full max-w-md p-6 bg-pink-50 rounded-3xl shadow-xl mx-4">
-        <button 
-          onClick={() => {
-            if (step === 3) {
-              setStep(1); // Go back to the Forgot Password step
-            } else {
-              setIsLogin(true); // Navigate back to Login
-              setIsForgotPassword(false); // Reset forgot password state
-            }
-          }} 
-          className="text-gray-800 mb-6 flex items-center"
+        <button
+          onClick={handleBack}
+          className="text-gray-800 mb-6 flex items-center hover:text-gray-600 transition-colors"
+          aria-label="Go back"
         >
           <IoArrowBack size={24} />
         </button>
