@@ -1,7 +1,6 @@
 import React from 'react';
 import {RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import LogoSignup from '../assets/LogoSignup.png';
-import coverLogin from '../assets/cover.png';
 import { useNavigate } from 'react-router-dom';
 import Background from './Background';
 
@@ -13,7 +12,7 @@ const Login = ({ setIsLoggedIn }) => {
 
   // In your Login component
 const handleLogin = () => {
-  if (username === '12345' && password === '12345') {
+  if (username === 'Irish_Lince' && password === '12345') {
     localStorage.setItem('userToken', 'exampleToken');
     localStorage.setItem('username', username);
     localStorage.setItem('email', 'user@example.com'); // Replace with actual email

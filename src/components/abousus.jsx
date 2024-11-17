@@ -3,18 +3,25 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Phone, Mail, MapPin, Heart } from 'lucide-react';
 import Header from './Header';
+import AkiImage from '../assets/Project Members/Aki.png';
+import LinceImage from '../assets/Project Members/Lince.png';
+import ArvinImage from '../assets/Project Members/Arvin.png'
+import MiguelImage from '../assets/Project Members/Miguel.png';
+import MatenImage from '../assets/Project Members/Maten.png';
+import backgroundImage from '../assets/coverAboutus.png';
+import backgroundImageJoinus from '../assets/CoverJoinus.png';
 
 export default function BloodDonationWebsite() {
   const [currentTeamIndex, setCurrentTeamIndex] = useState(2);
  
 
   const teamMembers = [
-    { name: 'Dr. Sarah Chen', role: 'Medical Director', image: 'https://i.pravatar.cc/300?img=1' },
-    { name: 'James Wilson', role: 'Operations Manager', image: 'https://i.pravatar.cc/300?img=2' },
-    { name: 'Dr. Maria Rodriguez', role: 'Blood Bank Specialist', image: 'https://i.pravatar.cc/300?img=3' },
-    { name: 'David Kumar', role: 'Community Outreach', image: 'https://i.pravatar.cc/300?img=4' },
-    { name: 'Emma Thompson', role: 'Donor Relations', image: 'https://i.pravatar.cc/300?img=5' },
-  ];
+    { name: 'Villaflor, Akimarie A.', role: 'System Analyst/Frontend', image: AkiImage },
+    { name: 'Lince, Irish T.', role: 'Tester/QA Frontend', image: LinceImage },
+    { name: 'Espinoza, Arvin S.', role: 'Team Leader/Backend', image: ArvinImage },
+    { name: 'Carandang, Miguel T.', role: 'Integration/Backend', image: MiguelImage },
+    { name: 'Maten, Rovic', role: 'Tester/QA Frontend', image: MatenImage },
+ ];
 
   const nextTeamSlide = () => {
     setCurrentTeamIndex((prevIndex) => (prevIndex + 1) % teamMembers.length);
@@ -36,109 +43,117 @@ export default function BloodDonationWebsite() {
       <Header />
 
       {/* Main Content */}
-      <main className="pt-17">
-        {/* Hero Section */}
-        <div className="relative h-64 sm:h-96 bg-red-100 mb-16">
-          <div className="absolute inset-0 flex items-center justify-center flex-col text-center p-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-red-800">About Us</h1>
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-300 rounded-full flex items-center justify-center mb-4">
-              <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-            </div>
+      <main className="pt-16">
+      {/* Hero Section */}
+      <div 
+        className="relative h-65 sm:h-96 mb-15" 
+        style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center flex-col text-center p-8">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-white underline decoration-white decoration-4">
+  About Us
+</h1>
+          <div>
           </div>
         </div>
+      </div>
 
         {/* Who We Are Section */}
         <section className="bg-white px-6 py-12 sm:py-16">
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-red-800">Who We Are</h2>
-              <p className="text-sm sm:text-base text-gray-700">
-                At <span className="text-red-600 font-semibold">RedSource</span>, our passion lies in saving lives through the power of generosity and community...
-              </p>
-            </div>
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-red-800">Our Mission and Impact</h2>
-              <p className="text-sm sm:text-base text-gray-700">
-                At the heart of <span className="text-red-600 font-semibold">RedSource</span> is a profound commitment to saving lives...
-              </p>
-            </div>
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 text-redsource">Who We Are</h2>
+            <p className="text-sm sm:text-base text-graycustom">
+              At <span className="text-redsource font-semibold">RedSource</span>, our passion lies in saving lives through the power of generosity and community. Founded in 2010, we began as a small initiative to address the urgent demand for blood in local hospitals. Over time, we have grown into a trusted organization serving thousands of patients annually. Every drop of blood donated is a testament to the compassion of individuals who choose to make a difference.
+            </p>
           </div>
-        </section>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 text-redsource">Our Mission and Impact</h2>
+            <p className="text-sm sm:text-base text-graycustom">
+              At the heart of <span className="text-redsource font-semibold">RedSource</span> is a profound commitment to bridging the gap between those who can give and those who need. Blood donation is more than a medical act; it’s a lifeline that connects humanity. Our mission is to ensure a reliable and safe blood supply for hospitals, clinics, and emergency care facilities while fostering awareness about the life-saving importance of blood donation.
+            </p>
+          </div>
+        </div>
+       </section>
 
         {/* Join Us Section */}
-        <section className="bg-red-900 text-white py-12 sm:py-16 px-6 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl sm:text-4xl font-bold mb-6">Join Us In Saving Lives!</h2>
-            <p className="text-base sm:text-xl mb-12">
-              You have the power to save lives. Whether you're a first-time donor or a seasoned supporter, there's always a way to help.
-            </p>
-            
-            <div className="space-y-6 text-left max-w-2xl mx-auto">
-              {['Donate Blood', 'Volunteer Your Time', 'Spread the Word'].map((item) => (
-                <div key={item} className="flex items-start gap-2">
-                  <span className="text-red-300 mt-1.5">•</span>
-                  <div>
-                    <h3 className="font-semibold mb-1">{item}:</h3>
-                    <p className="text-sm sm:text-base">{item === 'Donate Blood' 
-                      ? 'It only takes a few minutes to make a lifetime of difference. We ensure the donation process is comfortable, safe, and rewarding.'
-                      : item === 'Volunteer Your Time'
-                      ? 'Join our team of dedicated volunteers who help with drives, donor support, and community outreach.'
-                      : 'Be an advocate for life. Encourage your friends and family to join the cause and make blood donation a habit.'}
-                    </p>
+        <section 
+            className="text-white py-12 sm:py-16 px-6 text-center" 
+            style={{ backgroundImage: `url(${backgroundImageJoinus})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+          >
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-2xl sm:text-4xl font-bold mb-6">Join Us In Saving Lives!</h2>
+              <p className="text-base sm:text-xl mb-12">
+                You have the power to save lives. Whether you're a first-time donor or a seasoned supporter, there's always a way to help.
+              </p>
+              
+              <div className="space-y-6 text-left max-w-2xl mx-auto">
+                {['Donate Blood', 'Volunteer Your Time', 'Spread the Word'].map((item) => (
+                  <div key={item} className="flex items-start gap-2">
+                    <span className="text-red-300 mt-1.5">•</span>
+                    <div>
+                      <h3 className="font-semibold mb-1">{item}:</h3>
+                      <p className="text-sm sm:text-base">{item === 'Donate Blood' 
+                        ? 'It only takes a few minutes to make a lifetime of difference. We ensure the donation process is comfortable, safe, and rewarding.'
+                        : item === 'Volunteer Your Time'
+                        ? 'Join our team of dedicated volunteers who help with drives, donor support, and community outreach.'
+                        : 'Be an advocate for life. Encourage your friends and family to join the cause and make blood donation a habit.'}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
         {/* Information Sections */}
         <section className="bg-red-50 px-6 py-12 sm:py-16">
-          <div className="max-w-6xl mx-auto space-y-12">
-            {/* Why Blood Donation Matters */}
-            <div className="flex flex-col md:flex-row justify-between items-start gap-8">
-              <div className="flex-1 max-w-xl">
-                <h2 className="text-xl sm:text-2xl font-bold text-red-800 mb-4">
-                  Why Blood Donation Matters
-                </h2>
-                <div className="space-y-4 text-sm sm:text-base text-gray-600">
-                  <p>
-                    Every two seconds, someone needs blood—whether for emergencies, surgeries, or chronic illnesses. Blood cannot be manufactured, making donors like you essential.
-                  </p>
-                  <p>
-                    A single donation can save up to three lives, offering hope and healing to patients and their families. At <span className="text-red-600 font-semibold">RedSource</span>, we ensure every donation is safe, simple, and rewarding.
-                  </p>
-                </div>
-              </div>
-              <div className="relative w-full md:w-auto">
-                <img
-                  src="/placeholder.svg?height=200&width=200"
-                  alt="Blood donation process"
-                  className="w-full md:w-[200px] h-[200px] rounded-full object-cover"
-                />
-                <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-200 rounded-full" />
-                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-red-200 rounded-full" />
-              </div>
-            </div>
-
-            {/* Our Commitment to Safety */}
-            <div className="flex flex-col md:flex-row justify-between items-start gap-8">
-              <div className="relative order-2 md:order-first w-full md:w-auto">
-                <div className="w-full md:w-[200px] h-[200px] rounded-full bg-red-100"></div>
-                <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-200 rounded-full" />
-                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-red-200 rounded-full" />
-              </div>
-              <div className="flex-1 max-w-xl order-1 md:order-last">
-                <h2 className="text-xl sm:text-2xl font-bold text-red-800 mb-4">
-                  Our Commitment to Safety
-                </h2>
-                <p className="text-sm sm:text-base text-gray-600">
-                  Your safety is our top priority. At <span className="text-red-600 font-semibold">RedSource</span>, we adhere to the highest medical and ethical standards to ensure a safe and comfortable donation process. From sterile equipment to trained professionals, every step of your journey is designed to provide peace of mind.
+        <div className="max-w-6xl mx-auto space-y-12">
+          {/* Why Blood Donation Matters */}
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8">
+            <div className="flex-1 max-w-xl">
+              <h2 className="text-xl sm:text-2xl font-bold text-redsource mb-4">
+                Why Blood Donation Matters
+              </h2>
+              <div className="space-y-4 text-sm sm:text-base text-graycustom">
+                <p>
+                  Every two seconds, someone needs blood—whether for emergencies, surgeries, or chronic illnesses. Blood cannot be manufactured, making donors like you essential.
+                </p>
+                <p>
+                  A single donation can save up to three lives, offering hope and healing to patients and their families. At <span className="text-redsource font-semibold">RedSource</span>, we ensure every donation is safe, simple, and rewarding.
                 </p>
               </div>
             </div>
+            <div className="relative w-full md:w-auto">
+              <img
+                src="/placeholder.svg?height=200&width=200"
+                alt="Blood donation process"
+                className="w-full md:w-[200px] h-[200px] rounded-full object-cover"
+              />
+              <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-200 rounded-full" />
+              <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-red-200 rounded-full" />
+            </div>
           </div>
+
+          {/* Our Commitment to Safety */}
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8">
+            <div className="relative order-2 md:order-first w-full md:w-auto">
+              <div className="w-full md:w-[200px] h-[200px] rounded-full bg-red-100"></div>
+              <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-200 rounded-full" />
+              <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-red-200 rounded-full" />
+            </div>
+            <div className="flex-1 max-w-xl order-1 md:order-last">
+              <h2 className="text-xl sm:text-2xl font-bold text-redsource mb-4">
+                Our Commitment to Safety
+              </h2>
+              <p className="text-sm sm:text-base text-graycustom">
+                Your safety is our top priority. At <span className="text-redsource font-semibold">RedSource</span>, we adhere to the highest medical and ethical standards to ensure a safe and comfortable donation process. From sterile equipment to trained professionals, every step of your journey is designed to provide peace of mind.
+              </p>
+            </div>
+          </div>
+        </div>
         </section>
+
 
         {/* Team Members Section */}
         <section className="bg-red-900 py-16 px-4 relative overflow-x-hidden">
@@ -163,7 +178,7 @@ export default function BloodDonationWebsite() {
                     }`}
                   >
                     <div className="bg-red-800 rounded-lg overflow-hidden shadow-lg w-full sm:w-64">
-                      <div className="h-48 sm:h-64 bg-red-700 flex justify-center items-center">
+                      <div className="h-48 sm:h-64 bg-white flex justify-center items-center">
                         <img
                           src={member.image}
                           alt={member.name}

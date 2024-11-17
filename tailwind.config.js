@@ -6,10 +6,11 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'login-bg': "url('/src/assets/cover.png')",
       },
       colors: {
         'custom-red': '#8B0000', // Add your custom background color here
+        'redsource': '#701E1E', // {/* Information Sections */}
+        'graycustom': '#686868', // {/* Information Sections */}
       },
     },
   },

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ArrowRight, Calendar, MapPin, Users, Phone, Mail, Clock, Coffee } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Users, Phone, Mail, Clock, Coffee, Heart, ChevronRight, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import backgroundImage from '../assets/CoverPreviehomepage.png';
 import bloodBag from '../assets/LeftContentimg.png';
 import Header from './Header'; // Make sure the relative path is correct
@@ -10,77 +10,119 @@ import Header from './Header'; // Make sure the relative path is correct
 
 export default function Home() {
   const HeroSection = () => (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 grid lg:grid-cols-2 gap-8 items-center">
-        {/* Left Content */}
-        <div className="space-y-6 sm:space-y-8">
-          <div className="pl-4 sm:pl-20 space-y-6 sm:space-y-8">
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <img
-                src={bloodBag}
-                alt="Blood bag"
-                className="w-60 sm:w-80 h-32 sm:h-40 object-contain"
-              />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center sm:text-left">Why Donate Blood?</h2>
-            <ul className="space-y-2 sm:space-y-3">
-              {["Save lives", "Quick and simple process", "Your donation can save 3+ lives", "Help in emergencies", "Free health check with every donation"].map((item, index) => (
-                <li key={index} className="flex items-center gap-2 text-gray-700 text-sm sm:text-base">
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <a
-              href="/donate"
-              className="inline-block w-full sm:w-auto bg-red-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full hover:bg-red-700 transition-colors text-sm sm:text-base text-center"
-            >
-              DONATE NOW
-            </a>
-          </div>
+    <div className="relative min-h-[90vh] bg-gradient-to-br from-red-50 to-white overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-red-100 opacity-20 transform rotate-45">
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="absolute h-32 w-32 border border-red-200 rounded-full animate-pulse" 
+                 style={{ 
+                   top: `${Math.random() * 100}%`, 
+                   left: `${Math.random() * 100}%`,
+                   animationDelay: `${Math.random() * 2}s`
+                 }} 
+            />
+          ))}
         </div>
-
-        {/* Right Content */}
-        <div className="relative h-64 sm:h-80 lg:h-[400px]">
-          <img
-            src={backgroundImage}
-            alt="Blood donation process"
-            className="w-full h-full object-cover rounded-lg shadow-lg"
-          />
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${i === 2 ? 'bg-red-500' : 'bg-gray-300'}`}
-              />
-            ))}
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 py-20 relative">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8">
+            <div className="inline-flex items-center px-4 py-2 bg-red-100 rounded-full">
+              <Heart className="w-4 h-4 text-red-500 mr-2" />
+              <span className="text-red-600 text-sm font-medium">Save Lives Today</span>
+            </div>
+            <h1 className="text-5xl font-bold text-gray-900 leading-tight">
+              Your Blood Donation
+              <span className="text-red-600"> Can Save Lives</span>
+            </h1>
+            <p className="text-lg text-gray-600">
+              Every drop counts. Join our community of lifesavers and make a difference in someone's life today.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button className="px-8 py-4 bg-red-600 text-white rounded-xl hover:bg-red-700 transform hover:scale-105 transition-all shadow-lg">
+                Donate Now
+              </button>
+              <button className="px-8 py-4 bg-white text-red-600 border-2 border-red-600 rounded-xl hover:bg-red-50 transform hover:scale-105 transition-all">
+                Learn More
+              </button>
+            </div>
+          </div>
+          
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-red-100 to-transparent rounded-3xl transform rotate-3"></div>
+            <img
+              src={backgroundImage}
+              alt="Blood donation"
+              className="rounded-3xl shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500"
+            />
           </div>
         </div>
       </div>
     </div>
   );
 
+
   const DonationProcess = () => {
     const steps = [
-      { icon: Users, title: "Registration", description: "Sign up and provide basic information" },
-      { icon: Calendar, title: "Appointment", description: "Schedule a convenient time for donation" },
-      { icon: Clock, title: "Pre-Donation Screening", description: "Quick health check and eligibility confirmation" },
-      { icon: MapPin, title: "Donation", description: "Safe and comfortable blood donation process" },
-      { icon: Coffee, title: "Recovery", description: "Short rest and refreshments after donation" },
+      { 
+        icon: Users, 
+        title: "Registration", 
+        description: "Quick and easy sign-up process",
+        color: "bg-blue-50" 
+      },
+      { 
+        icon: Calendar, 
+        title: "Appointment", 
+        description: "Choose your preferred time",
+        color: "bg-green-50"
+      },
+      { 
+        icon: Clock, 
+        title: "Screening", 
+        description: "Brief health check-up",
+        color: "bg-yellow-50"
+      },
+      { 
+        icon: Heart, 
+        title: "Donation", 
+        description: "Safe and comfortable process",
+        color: "bg-red-50"
+      },
+      { 
+        icon: Coffee, 
+        title: "Recovery", 
+        description: "Relax with refreshments",
+        color: "bg-purple-50"
+      },
     ];
 
     return (
-      <section className="bg-gray-100 py-12 sm:py-20">
+      <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">Donation Process</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">How Donation Works</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Our donation process is simple, safe, and convenient. Here's what you can expect when you visit us.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
             {steps.map((step, index) => (
-              <div key={index} className="flex flex-col items-center text-center p-4">
-                <div className="bg-red-600 text-white rounded-full p-3 sm:p-4 mb-3 sm:mb-4">
-                  <step.icon size={20} className="sm:w-6 sm:h-6" />
+              <div key={index} className="relative">
+                <div className={`${step.color} rounded-2xl p-6 h-full transform hover:scale-105 transition-all duration-300 hover:shadow-xl`}>
+                  <div className="flex flex-col items-center text-center space-y-4">
+                    <div className="bg-white p-4 rounded-xl shadow-md">
+                      <step.icon className="w-8 h-8 text-red-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold">{step.title}</h3>
+                    <p className="text-gray-600">{step.description}</p>
+                  </div>
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-sm sm:text-base text-gray-600">{step.description}</p>
+                {index < steps.length - 1 && (
+                  <div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -91,20 +133,51 @@ export default function Home() {
 
   const Testimonials = () => {
     const testimonials = [
-      { name: "John Doe", quote: "Donating blood was a rewarding experience. It's amazing to know I've helped save lives." },
-      { name: "Jane Smith", quote: "The process was quick and easy. The staff made me feel comfortable throughout." },
-      { name: "Mike Johnson", quote: "I donate regularly now. It's a simple way to make a big difference in someone's life." },
+      {
+        name: "Sarah Johnson",
+        role: "Regular Donor",
+        quote: "Donating blood has become a meaningful part of my life. It's incredible to know that just 30 minutes of my time can save multiple lives.",
+        image: "https://i.pravatar.cc/300?img=1"
+      },
+      {
+        name: "Michael Chen",
+        role: "First-time Donor",
+        quote: "I was nervous at first, but the staff made me feel so comfortable. The process was much easier than I expected!",
+        image: "https://i.pravatar.cc/300?img=3"
+      },
+      {
+        name: "Emma Davis",
+        role: "Monthly Donor",
+        quote: "The team is professional and caring. I've been donating monthly for a year now, and it's always a positive experience.",
+        image: "https://i.pravatar.cc/300?img=5"
+      },
     ];
 
     return (
-      <section className="bg-white py-12 sm:py-20">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">What Our Donors Say</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">Donor Stories</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Hear from our amazing donors about their experiences and why they choose to save lives.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-md">
-                <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">"{testimonial.quote}"</p>
-                <p className="text-sm sm:text-base font-semibold">- {testimonial.name}</p>
+              <div key={index} className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                <div className="flex items-center mb-6">
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div>
+                    <h3 className="font-semibold text-lg">{testimonial.name}</h3>
+                    <p className="text-red-600 text-sm">{testimonial.role}</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 italic">"{testimonial.quote}"</p>
               </div>
             ))}
           </div>
@@ -114,58 +187,109 @@ export default function Home() {
   };
 
   const ContactInfo = () => (
-    <section className="bg-red-50 py-20">
+    <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">Contact Us</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Have questions? We're here to help. Contact us through any of these channels.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {[
-            { icon: Phone, title: "Phone", info: "(123) 456-7890" },
-            { icon: Mail, title: "Email", info: "info@blooddonation.com" },
+            { 
+              icon: Phone, 
+              title: "Phone",
+              info: "(123) 456-7890",
+              description: "Available Monday to Friday, 9AM-5PM",
+              color: "bg-blue-50"
+            },
+            { 
+              icon: Mail, 
+              title: "Email",
+              info: "Redsource@blooddonation.com",
+              description: "We'll respond within 24 hours",
+              color: "bg-red-50"
+            },
           ].map((item, index) => (
-            <div key={index} className="flex items-center justify-center">
-              <item.icon className="text-red-600 mr-4" size={24} />
+            <div key={index} 
+                 className={`${item.color} p-8 rounded-2xl hover:shadow-lg transition-shadow flex items-start space-x-6`}>
+              <div className="bg-white p-4 rounded-xl shadow-md">
+                <item.icon className="w-6 h-6 text-red-600" />
+              </div>
               <div>
-                <h3 className="font-semibold mb-1">{item.title}</h3>
-                <p>{item.info}</p>
+                <h3 className="font-semibold text-xl mb-2">{item.title}</h3>
+                <p className="text-lg text-gray-900 mb-2">{item.info}</p>
+                <p className="text-sm text-gray-600">{item.description}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
   
   const Footer = () => (
     <footer className="bg-red-900 text-white py-12">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <h4 className="text-lg font-semibold mb-4">About Us</h4>
-            <p className="text-sm opacity-80">
-              We are dedicated to saving lives through blood donation,
-              connecting donors with those in need.
+            <h4 className="text-xl font-bold mb-6">About Us</h4>
+            <p className="text-gray-400 mb-6">
+            Our system streamlines blood donation, appointment scheduling, inventory management, and medical assessments for efficient, safe blood donation processes.
             </p>
+            <div className="flex space-x-4">
+              {/* Replace with available icons from lucide-react */}
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <Facebook className="w-6 h-6" />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <Twitter className="w-6 h-6" />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <Instagram className="w-6 h-6" />
+              </a>
+            </div>
           </div>
+          
           <div>
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              {['Home', 'Donate Blood', 'Find Location', 'Contact Us'].map((link, index) => (
+            <h4 className="text-xl font-bold mb-6">Quick Links</h4>
+            <ul className="space-y-4">
+              {[
+                'Home',
+                'About Us',
+                'Donate Blood',
+                'Find Location',
+                'Contact Us'
+              ].map((link, index) => (
                 <li key={index}>
-                  <a href="#" className="text-sm opacity-80 hover:opacity-100">{link}</a>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                    <ChevronRight className="w-4 h-4 mr-2" />
+                    {link}
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
+          
           <div>
-            <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
-            <ul className="space-y-2">
-              <li className="text-sm opacity-80">Phone: (123) 456-7890</li>
-              <li className="text-sm opacity-80">Email: info@blooddonation.com</li>
+            <h4 className="text-xl font-bold mb-6">Contact Info</h4>
+            <ul className="space-y-4">
+              <li className="text-gray-400 flex items-start">
+                <Phone className="w-5 h-5 mr-3 mt-1 flex-shrink-0" />
+                <span>(123) 456-7890</span>
+              </li>
+              <li className="text-gray-400 flex items-start">
+                <Mail className="w-5 h-5 mr-3 mt-1 flex-shrink-0" />
+                <span>Redsource@blooddonation.com</span>
+              </li>
             </ul>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-red-800 text-center text-sm opacity-80">
-          © 2024 Blood Donation Center. All rights reserved.
+        
+        <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+          <p>© 2024 Blood Donation Center. All rights reserved.</p>
         </div>
       </div>
     </footer>
