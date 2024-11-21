@@ -38,51 +38,52 @@ export default function Schedule() {
       <Header />
 
       <main className="max-w-[1920px] mx-auto px-6 py-8">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-8">
           <Link 
             to="/donation-center" 
-            className="flex items-center text-gray-600"
+            className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
-            <span className="ml-2">BACK</span>
+            <span>BACK</span>
           </Link>
           <button 
             onClick={handleConfirm}
-            className="flex items-center text-gray-600"
+            className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors"
           >
-            <span className="mr-2">CONFIRM</span>
+            <span>CONFIRM</span>
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
 
-        <h1 className="text-2xl font-bold text-center mb-8">
-          <span className="bg-gray-100 px-8 py-2 rounded-full">
+        <h1 className="text-3xl font-bold text-center mb-8">
+          <span className="bg-gray-100 px-12 py-3 rounded-full text-red-600">
             Select Date and Time
           </span>
         </h1>
 
-        <div className="max-w-4xl mx-auto bg-red-50 rounded-lg p-8">
-          <div className="grid md:grid-cols-2 gap-8">
+        <div className="max-w-5xl mx-auto bg-red-50 rounded-3xl p-12">
+          <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-xl font-semibold mb-4">Select Donation Date</h2>
-              <div className="bg-white rounded-lg p-4 shadow">
+              <h2 className="text-2xl font-bold mb-6">Select Donation Date</h2>
+              <div className="bg-white rounded-2xl p-6 shadow-sm flex justify-center items-center">
                 <DatePicker
                   selected={date}
                   onChange={(date) => setDate(date)}
                   inline
+                  className="!font-sans"
                 />
               </div>
             </div>
 
             <div>
-              <h2 className="text-xl font-semibold mb-4">Select Time Slot</h2>
-              <div className="bg-white rounded-lg p-4 shadow">
-                <p className="mb-4">Select an available time slot!</p>
-                <div className="space-y-2">
+              <h2 className="text-2xl font-bold mb-6">Select Time Slot</h2>
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <p className="mb-6 text-lg">Select an available time slot!</p>
+                <div className="space-y-3">
                   {availableTimeSlots.map((time) => (
                     <label
                       key={time}
-                      className="flex items-center space-x-3 p-2 rounded hover:bg-gray-50 cursor-pointer"
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                     >
                       <input
                         type="radio"
@@ -90,9 +91,9 @@ export default function Schedule() {
                         value={time}
                         checked={selectedTime === time}
                         onChange={(e) => setSelectedTime(e.target.value)}
-                        className="form-radio text-[#C91C1C]"
+                        className="w-5 h-5 text-red-600 border-2 border-gray-300 focus:ring-red-600"
                       />
-                      <span>{time}</span>
+                      <span className="text-lg">{time}</span>
                     </label>
                   ))}
                 </div>
@@ -100,10 +101,12 @@ export default function Schedule() {
             </div>
           </div>
           
-          <div className="mt-6 text-center">
-            <div className="inline-block bg-red-100 rounded-lg px-4 py-2">
-              <p className="text-sm text-gray-600">Donation Eligibility Status:</p>
-              <p className="font-semibold text-[#C91C1C]">FOR REVIEW</p>
+          <div className="mt-8 text-center">
+            <div className="inline-block">
+              <p className="text-gray-600 mb-1">Donation Eligibility Status:</p>
+              <p className="font-bold text-red-600 bg-red-100 px-6 py-2 rounded-full">
+                FOR REVIEW
+              </p>
             </div>
           </div>
         </div>

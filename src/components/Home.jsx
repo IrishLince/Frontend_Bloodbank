@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ArrowRight, Calendar, MapPin, Users, Phone, Mail, Clock, Coffee, Heart, ChevronRight, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-import backgroundImage from '../assets/CoverPreviehomepage.png';
+import backgroundImage from '../assets/coverAboutus.png';
 import bloodBag from '../assets/LeftContentimg.png';
 import Header from './Header'; // Make sure the relative path is correct
 

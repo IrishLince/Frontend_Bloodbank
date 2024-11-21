@@ -12,7 +12,7 @@ const Login = ({ setIsLoggedIn }) => {
 
   // In your Login component
 const handleLogin = () => {
-  if (username === 'Irish_Lince' && password === '12345') {
+  if (username === 'Arvin' && password === '12345') {
     localStorage.setItem('userToken', 'exampleToken');
     localStorage.setItem('username', username);
     localStorage.setItem('email', 'user@example.com'); // Replace with actual email

@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { Menu, X, UserCircle2, Settings, LogOut, User, Mail } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -29,7 +31,7 @@ const ProfileDropdown = ({ onLogout }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-colors duration-200"
       >
-        <UserCircle2 className="w-8 h-8 text-gray-600 hover:text-red-600" />
+        <UserCircle2 className="w-8 h-8 text-white hover:text-gray-200" />
       </button>
 
       {isOpen && (
@@ -54,7 +56,7 @@ const ProfileDropdown = ({ onLogout }) => {
 
           <div className="py-2">
             <button
-              onClick={() => navigate('/profile-settings')}
+              onClick={() => navigate('/profile-page')}
               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
             >
               <User className="w-4 h-4" />
@@ -85,8 +87,7 @@ const ProfileDropdown = ({ onLogout }) => {
   );
 };
 
-const NavLink = ({ to, children, isAuthenticated, location }) => {
-  const isActive = location.pathname === to;
+const NavLink = ({ to, children, isAuthenticated, isActive }) => {
   return (
     <Link
       to={to}
@@ -95,7 +96,7 @@ const NavLink = ({ to, children, isAuthenticated, location }) => {
         ${isAuthenticated
           ? isActive
             ? "bg-white text-red-600 font-semibold"
-            : "text-black hover:bg-white hover:text-red-600"
+            : "text-white hover:bg-white/20"
           : isActive
             ? "bg-white text-red-600 font-semibold"
             : "text-white hover:bg-white/20"
@@ -133,15 +134,32 @@ const Header = () => {
     const checkAuth = () => {
       const token = localStorage.getItem('userToken');
       setIsAuthenticated(!!token);
-      if (!token && location.pathname !== '/about-us') {
-        navigate('/homepage');
-      }
     };
 
     checkAuth();
     window.addEventListener('storage', checkAuth);
-    return () => window.removeEventListener('storage', checkAuth);
-  }, [navigate, location.pathname]);
+
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const token = localStorage.getItem('userToken');
+      setIsAuthenticated(!!token);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  const hideHeaderPaths = ['/login', '/signup'];
+  if (hideHeaderPaths.includes(location.pathname)) {
+    return null;
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('userToken');
@@ -153,19 +171,19 @@ const Header = () => {
 
   const LoggedInLinks = () => (
     <>
-      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} location={location}>Home</NavLink>
-      <NavLink to="/hospital" isAuthenticated={isAuthenticated} location={location}>Hospital</NavLink>
-      <NavLink to="/donation-center" isAuthenticated={isAuthenticated} location={location}>Online Booking</NavLink>
-      <NavLink to="/about-us" isAuthenticated={isAuthenticated} location={location}>About Us</NavLink>
+      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} isActive={location.pathname === '/successful-login'}>Home</NavLink>
+      <NavLink to="/hospital" isAuthenticated={isAuthenticated} isActive={location.pathname === '/hospital'}>Hospital</NavLink>
+      <NavLink to="/donation-center" isAuthenticated={isAuthenticated} isActive={location.pathname === '/donation-center'}>Online Booking</NavLink>
+      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'}>About Us</NavLink>
     </>
   );
 
   const LoggedOutLinks = () => (
     <>
-      <NavLink to="/homepage" isAuthenticated={isAuthenticated} location={location}>Home</NavLink>
-      <NavLink to="/contact" isAuthenticated={isAuthenticated} location={location}>Contact Us</NavLink>
-      <NavLink to="/faqs" isAuthenticated={isAuthenticated} location={location}>FAQs</NavLink>
-      <NavLink to="/about-us" isAuthenticated={isAuthenticated} location={location}>About Us</NavLink>
+      <NavLink to="/homepage" isAuthenticated={isAuthenticated} isActive={location.pathname === '/homepage'}>Home</NavLink>
+      <NavLink to="/contact" isAuthenticated={isAuthenticated} isActive={location.pathname === '/contact'}>Contact Us</NavLink>
+      <NavLink to="/faqs" isAuthenticated={isAuthenticated} isActive={location.pathname === '/faqs'}>FAQs</NavLink>
+      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'}>About Us</NavLink>
       <div className="flex gap-2">
         <Link
           to="/signup"
@@ -185,17 +203,18 @@ const Header = () => {
 
   return (
     <header 
-      className={`
-        fixed top-0 left-0 w-full z-50 
-        transition-all duration-300 
-        ${isVisible ? 'translate-y-0' : '-translate-y-full'}
-        ${isAuthenticated ? 'bg-red-600' : 'bg-red-600'} 
-        shadow-md
-      `}
+     className={`
+      fixed top-0 left-0 w-full
+      z-50 
+      transition-all duration-300 
+      ${isVisible ? 'translate-y-0' : '-translate-y-full'}
+      ${isAuthenticated ? 'bg-red-600' : 'bg-red-600'} 
+      shadow-lg
+      h-16
+     `}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
           <div className="flex-shrink-0">
             <Link to={isAuthenticated ? '/successful-login' : '/homepage'}>
               <div className="w-10 h-10 flex items-center justify-center">
@@ -204,41 +223,37 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-2">
             {isAuthenticated ? <LoggedInLinks /> : <LoggedOutLinks />}
           </nav>
 
-          {/* Profile Dropdown (Desktop) */}
           {isAuthenticated && (
             <div className="hidden md:block">
               <ProfileDropdown onLogout={handleLogout} />
             </div>
           )}
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden rounded-lg p-2 hover:bg-red-50 transition-colors duration-300"
+            className="md:hidden rounded-lg p-2 hover:bg-red-700 transition-colors duration-300"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
-              <X className="h-6 w-6 text-gray-600" />
+              <X className="h-6 w-6 text-white" />
             ) : (
-              <Menu className="h-6 w-6 text-gray-600" />
+              <Menu className="h-6 w-6 text-white" />
             )}
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100">
+          <div className="md:hidden bg-red-600 border-t border-red-700">
             <nav className="flex flex-col space-y-1 px-2 pb-3 pt-2">
               {isAuthenticated ? <LoggedInLinks /> : <LoggedOutLinks />}
               {isAuthenticated && (
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg"
+                  className="flex items-center space-x-2 px-4 py-2 text-white hover:bg-red-700 rounded-lg"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>
@@ -253,3 +268,4 @@ const Header = () => {
 };
 
 export default Header;
+

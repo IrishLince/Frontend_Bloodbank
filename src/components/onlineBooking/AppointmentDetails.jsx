@@ -17,16 +17,18 @@ export default function AppointmentDetails() {
       <Header />
 
       <main className="max-w-[1920px] mx-auto px-6 py-8">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-8">
           <button 
             onClick={() => navigate(-1)}
-            className="flex items-center text-gray-600"
+            className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
-            <span className="ml-2">BACK</span>
+            <span>BACK</span>
           </button>
-          <button className="flex items-center text-gray-600">
-            <span className="mr-2">Proceed</span>
+          <button 
+            className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors"
+          >
+            <span>Proceed</span>
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>

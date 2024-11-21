@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import Header from '../Header'
@@ -9,6 +9,7 @@ export default function ConfirmAppointment() {
   const { selectedHospital, appointmentDate, appointmentTime, formData } = location.state || {}
 
   const [showSuccess, setShowSuccess] = useState(false)
+  const [countdown, setCountdown] = useState(30)
   const [donorInfo, setDonorInfo] = useState({
     fullName: 'Daniel Padilla',
     email: 'danielpadilla@gmail.com',
@@ -17,6 +18,18 @@ export default function ConfirmAppointment() {
     dateOfBirth: 'April 26, 1995',
     medicalConditions: 'N/A',
   })
+
+  useEffect(() => {
+    let timer
+    if (showSuccess && countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prevCount) => prevCount - 1)
+      }, 1000)
+    } else if (countdown === 0) {
+      handleCloseSuccess()
+    }
+    return () => clearInterval(timer)
+  }, [showSuccess, countdown])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -47,19 +60,19 @@ export default function ConfirmAppointment() {
       <Header />
 
       <main className="max-w-[1920px] mx-auto px-6 py-8">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-8">
           <Link 
             to="/eligibility" 
-            className="flex items-center text-gray-600"
+            className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
-            <span className="ml-2">BACK</span>
+            <span>BACK</span>
           </Link>
           <button 
             onClick={handleSubmit}
-            className="flex items-center text-gray-600"
+            className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors"
           >
-            <span className="mr-2">CONFIRM</span>
+            <span>CONFIRM</span>
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
@@ -203,11 +216,14 @@ export default function ConfirmAppointment() {
               <h2 className="text-2xl font-bold text-[#C91C1C] mb-2">CONGRATULATIONS!</h2>
               <p className="text-xl mb-6">You have successfully booked your appointment!</p>
               
-              <div className="w-24 h-24 mx-auto mb-6">
+              <div className="w-32 h-32 mx-auto mb-6 relative">
                 <div className="w-full h-full bg-[#C91C1C] rounded-full flex items-center justify-center">
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                    <span className="text-[#C91C1C] text-2xl font-bold">+</span>
+                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+                    <img src="/placeholder.svg?height=48&width=48" alt="Logo" className="w-12 h-12" />
                   </div>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-white text-2xl font-bold">{countdown}</span>
                 </div>
               </div>
 
@@ -224,7 +240,7 @@ export default function ConfirmAppointment() {
               </button>
 
               <p className="text-sm text-gray-500">
-                Redirecting you to appointment details in 30s
+                Redirecting you to appointment details in {countdown}s
               </p>
             </div>
           </div>
