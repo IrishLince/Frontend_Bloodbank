@@ -1,18 +1,11 @@
-'use client'
-
 import React, { useState, useEffect } from 'react';
-import { Menu, X, UserCircle2, Settings, LogOut, User, Mail } from 'lucide-react';
+import { Menu, X, UserCircle2, Settings, LogOut, User, Mail, Home, Calendar, Info, List } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/Logo.png';
 
-const ProfileDropdown = ({ onLogout }) => {
+const ProfileDropdown = ({ onLogout, userData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-
-  const userData = {
-    username: localStorage.getItem('username') || 'User',
-    email: localStorage.getItem('email') || 'user@example.com',
-  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -29,9 +22,10 @@ const ProfileDropdown = ({ onLogout }) => {
     <div className="relative profile-dropdown">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-colors duration-200"
+        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-red-700 transition-colors duration-200"
+        aria-label="Open profile menu"
       >
-        <UserCircle2 className="w-8 h-8 text-white hover:text-gray-200" />
+        <UserCircle2 className="w-8 h-8 text-white" />
       </button>
 
       {isOpen && (
@@ -56,7 +50,10 @@ const ProfileDropdown = ({ onLogout }) => {
 
           <div className="py-2">
             <button
-              onClick={() => navigate('/profile-page')}
+              onClick={() => {
+                window.location.href = '/profile-page';
+                setIsOpen(false);
+              }}
               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
             >
               <User className="w-4 h-4" />
@@ -64,7 +61,10 @@ const ProfileDropdown = ({ onLogout }) => {
             </button>
 
             <button
-              onClick={() => navigate('/settings')}
+              onClick={() => {
+                window.location.href = '/settings';
+                setIsOpen(false);
+              }}
               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
             >
               <Settings className="w-4 h-4" />
@@ -87,12 +87,12 @@ const ProfileDropdown = ({ onLogout }) => {
   );
 };
 
-const NavLink = ({ to, children, isAuthenticated, isActive }) => {
+const NavLink = ({ to, children, isAuthenticated, isActive, icon, onClick }) => {
   return (
-    <Link
-      to={to}
+    <button
+      onClick={onClick}
       className={`
-        px-4 py-2 rounded-lg transition-all duration-300
+        px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2
         ${isAuthenticated
           ? isActive
             ? "bg-white text-red-600 font-semibold"
@@ -103,14 +103,16 @@ const NavLink = ({ to, children, isAuthenticated, isActive }) => {
         }
       `}
     >
-      {children}
-    </Link>
+      {icon}
+      <span>{children}</span>
+    </button>
   );
 };
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState('');
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollPos, setLastScrollPos] = useState(0);
   const location = useLocation();
@@ -133,7 +135,9 @@ const Header = () => {
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem('userToken');
+      const role = localStorage.getItem('userRole');
       setIsAuthenticated(!!token);
+      setUserRole(role || '');
     };
 
     checkAuth();
@@ -147,7 +151,9 @@ const Header = () => {
   useEffect(() => {
     const handlePopState = () => {
       const token = localStorage.getItem('userToken');
+      const role = localStorage.getItem('userRole');
       setIsAuthenticated(!!token);
+      setUserRole(role || '');
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -156,7 +162,7 @@ const Header = () => {
     };
   }, []);
 
-  const hideHeaderPaths = ['/login', '/signup'];
+  const hideHeaderPaths = ['/login', '/signup', '/forgot-password'];
   if (hideHeaderPaths.includes(location.pathname)) {
     return null;
   }
@@ -165,71 +171,100 @@ const Header = () => {
     localStorage.removeItem('userToken');
     localStorage.removeItem('username');
     localStorage.removeItem('email');
+    localStorage.removeItem('userRole');
     setIsAuthenticated(false);
-    navigate('/homepage');
+    setUserRole('');
+    window.location.href = '/homepage';
   };
 
-  const LoggedInLinks = () => (
+  const handleNavigation = (path) => {
+    window.location.href = path;
+    setIsMobileMenuOpen(false);
+  };
+
+  const Donor = () => (
     <>
-      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} isActive={location.pathname === '/successful-login'}>Home</NavLink>
-      <NavLink to="/hospital" isAuthenticated={isAuthenticated} isActive={location.pathname === '/hospital'}>Hospital</NavLink>
-      <NavLink to="/donation-center" isAuthenticated={isAuthenticated} isActive={location.pathname === '/donation-center'}>Online Booking</NavLink>
-      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'}>About Us</NavLink>
+      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} isActive={location.pathname === '/successful-login'} icon={<Home className="w-5 h-5" />} onClick={() => handleNavigation('/successful-login')}>Home</NavLink>
+      <NavLink to="/donation-center" isAuthenticated={isAuthenticated} isActive={location.pathname === '/donation-center'} icon={<Calendar className="w-5 h-5" />} onClick={() => handleNavigation('/donation-center')}>Online Booking</NavLink>
+      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'} icon={<Info className="w-5 h-5" />} onClick={() => handleNavigation('/about-us')}>About Us</NavLink>
+    </>
+  );
+
+  const HospitalAdmin = () => (
+    <>
+      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} isActive={location.pathname === '/successful-login'} icon={<Home className="w-5 h-5" />} onClick={() => handleNavigation('/successful-login')}>Home</NavLink>
+      <NavLink to="/hospital" isAuthenticated={isAuthenticated} isActive={location.pathname === '/hospital'} icon={<Calendar className="w-5 h-5" />} onClick={() => handleNavigation('/hospital')}>Requests</NavLink>
+      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'} icon={<Info className="w-5 h-5" />} onClick={() => handleNavigation('/about-us')}>About Us</NavLink>
+    </>
+  );
+
+  const BloodBankAdmin = () => (
+    <>
+      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} isActive={location.pathname === '/successful-login'} icon={<Home className="w-5 h-5" />} onClick={() => handleNavigation('/successful-login')}>Home</NavLink>
+      <NavLink to="/hospital" isAuthenticated={isAuthenticated} isActive={location.pathname === '/hospital'} icon={<List className="w-5 h-5" />} onClick={() => handleNavigation('/hospital')}>Hospital</NavLink>
+      <NavLink to="/inventory" isAuthenticated={isAuthenticated} isActive={location.pathname === '/inventory'} icon={<Calendar className="w-5 h-5" />} onClick={() => handleNavigation('/inventory')}>Inventory</NavLink>
+      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'} icon={<Info className="w-5 h-5" />} onClick={() => handleNavigation('/about-us')}>About Us</NavLink>
     </>
   );
 
   const LoggedOutLinks = () => (
     <>
-      <NavLink to="/homepage" isAuthenticated={isAuthenticated} isActive={location.pathname === '/homepage'}>Home</NavLink>
-      <NavLink to="/contact" isAuthenticated={isAuthenticated} isActive={location.pathname === '/contact'}>Contact Us</NavLink>
-      <NavLink to="/faqs" isAuthenticated={isAuthenticated} isActive={location.pathname === '/faqs'}>FAQs</NavLink>
-      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'}>About Us</NavLink>
+      <NavLink to="/homepage" isAuthenticated={isAuthenticated} isActive={location.pathname === '/homepage'} icon={<Home className="w-5 h-5" />} onClick={() => handleNavigation('/homepage')}>Home</NavLink>
+      <NavLink to="/faqs" isAuthenticated={isAuthenticated} isActive={location.pathname === '/faqs'} icon={<Info className="w-5 h-5" />} onClick={() => handleNavigation('/faqs')}>FAQs</NavLink>
+      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'} icon={<Info className="w-5 h-5" />} onClick={() => handleNavigation('/about-us')}>About Us</NavLink>
       <div className="flex gap-2">
-        <Link
-          to="/signup"
+        <button
+          onClick={() => handleNavigation('/signup')}
           className="px-4 py-2 rounded-lg bg-white text-red-600 hover:bg-red-50 transition-colors duration-300"
         >
           Sign Up
-        </Link>
-        <Link
-          to="/login"
+        </button>
+        <button
+          onClick={() => handleNavigation('/login')}
           className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors duration-300"
         >
           Log In
-        </Link>
+        </button>
       </div>
     </>
   );
 
+  const userData = {
+    username: localStorage.getItem('username') || 'User',
+    email: localStorage.getItem('email') || 'user@example.com',
+  };
+
   return (
     <header 
-     className={`
-      fixed top-0 left-0 w-full
-      z-50 
-      transition-all duration-300 
-      ${isVisible ? 'translate-y-0' : '-translate-y-full'}
-      ${isAuthenticated ? 'bg-red-600' : 'bg-red-600'} 
-      shadow-lg
-      h-16
-     `}
+      className={`
+        fixed top-0 left-0 w-full
+        z-50 
+        transition-all duration-300 
+        ${isVisible ? 'translate-y-0' : '-translate-y-full'}
+        bg-red-600
+        shadow-lg
+        h-16
+      `}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-shrink-0">
-            <Link to={isAuthenticated ? '/successful-login' : '/homepage'}>
+            <button onClick={() => handleNavigation(isAuthenticated ? '/successful-login' : '/homepage')}>
               <div className="w-10 h-10 flex items-center justify-center">
                 <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
               </div>
-            </Link>
+            </button>
           </div>
 
           <nav className="hidden md:flex items-center space-x-2">
-            {isAuthenticated ? <LoggedInLinks /> : <LoggedOutLinks />}
+            {!isAuthenticated ? <LoggedOutLinks /> : 
+             userRole === 'BloodBankAdmin' ? <BloodBankAdmin /> :
+             userRole === 'Hospital' ? <HospitalAdmin /> : <Donor />}
           </nav>
 
           {isAuthenticated && (
             <div className="hidden md:block">
-              <ProfileDropdown onLogout={handleLogout} />
+              <ProfileDropdown onLogout={handleLogout} userData={userData} />
             </div>
           )}
 
@@ -249,7 +284,9 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden bg-red-600 border-t border-red-700">
             <nav className="flex flex-col space-y-1 px-2 pb-3 pt-2">
-              {isAuthenticated ? <LoggedInLinks /> : <LoggedOutLinks />}
+              {!isAuthenticated ? <LoggedOutLinks /> : 
+               userRole === 'BloodBankAdmin' ? <BloodBankAdmin /> :
+               userRole === 'Hospital' ? <HospitalAdmin /> : <Donor />}
               {isAuthenticated && (
                 <button
                   onClick={handleLogout}
@@ -268,4 +305,3 @@ const Header = () => {
 };
 
 export default Header;
-

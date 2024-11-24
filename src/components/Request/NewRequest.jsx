@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
-import { UserCircle2 } from 'lucide-react';
-import Header from '../Header'
-
+import Header from '../Header';
 
 export default function NewRequest() {
   const [requestDate, setRequestDate] = useState('');
@@ -30,14 +28,13 @@ export default function NewRequest() {
   };
 
   const handleUnitsRequestedChange = (e) => {
-    setUnitsRequested(e.target.value);
+    const value = Math.max(0, Number(e.target.value)); 
+    setUnitsRequested(value);
     setErrors({ ...errors, unitsRequested: '' }); 
   };
 
   const handleSubmit = () => {
     let newErrors = {};
-    
-    
     if (!bloodType) newErrors.bloodType = 'Blood type is required';
     if (!unitsRequested) newErrors.unitsRequested = 'Units requested is required';
     if (!requestDate) newErrors.requestDate = 'Request date is required';
@@ -55,6 +52,9 @@ export default function NewRequest() {
     });
   };
 
+  
+  const today = new Date().toISOString().split('T')[0];
+
   return (
     <div className="bg-white flex flex-col min-h-screen">
        <Header />
@@ -68,13 +68,13 @@ export default function NewRequest() {
       </div>
 
       <div className="flex justify-center items-center pt-2 pb-4"> 
-        <div className="container1 bg-[#F2F2F2] p-4 rounded-full w-[35%] text-center">
+        <div className="container1 bg-[#F2F2F2] p-4 rounded-full w-full sm:w-[35%] text-center">
           <h1 className="text-[#C91C1C] text-xl font-bold">New Blood Request</h1>
         </div>
       </div>
 
-      <div className="flex justify-center items-start pt-2 pb-8 px-8"> 
-        <div className="container2 bg-[#FFE7E7] p-6 rounded-lg w-[50%]">
+      <div className="flex justify-center items-start pt-2 pb-8 px-4 sm:px-8"> 
+        <div className="container2 bg-[#FFE7E7] p-6 rounded-lg w-full sm:w-[50%]">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <label className="text-sm font-semibold w-1/3">Hospital Name:</label>
@@ -129,6 +129,7 @@ export default function NewRequest() {
                 value={unitsRequested}
                 onChange={handleUnitsRequestedChange}
                 placeholder="Enter Units"
+                min="0"
               />
             </div>
             <div className="flex justify-between items-center">
@@ -138,6 +139,7 @@ export default function NewRequest() {
                 className={`w-2/3 p-2 border rounded-md ${errors.requestDate ? 'border-red-500' : 'border-black'}`}
                 value={requestDate}
                 onChange={handleRequestDateChange}
+                min={today} 
               />
             </div>
             <div className="flex justify-between items-center">
@@ -147,20 +149,21 @@ export default function NewRequest() {
                 className={`w-2/3 p-2 border rounded-md ${errors.dateNeeded ? 'border-red-500' : 'border-black'}`}
                 value={dateNeeded}
                 onChange={handleDateNeededChange}
+                min={today}
               />
             </div>
           </div>
 
           {formError && (
             <div className="text-red-500 text-sm text-center pt-4">
-              Please fill out all the required forms.
+              Please fill out all the required fields.
             </div>
           )}
 
           <div className="flex justify-center items-center pt-6">
             <button
               onClick={handleSubmit}
-              className="bg-[#C91C1C] text-white py-2 px-6 rounded-lg font-semibold hover:bg-[#A81A1A]"
+              className="bg-[#C91C1C] text-white py-2 px-6 rounded-lg font-semibold hover:bg-[#A81A1A] w-full sm:w-auto"
             >
               SUBMIT
             </button>

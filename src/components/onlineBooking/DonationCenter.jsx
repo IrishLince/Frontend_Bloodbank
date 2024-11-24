@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react'
 import Header from '../Header'
 
 export default function DonationCenter() {
   const navigate = useNavigate()
+  const [searchTerm, setSearchTerm] = useState('')
   
   const hospitals = [
     {
@@ -24,6 +25,14 @@ export default function DonationCenter() {
     // ... other hospitals
   ]
 
+  const filteredHospitals = useMemo(() => {
+    return hospitals.filter(hospital =>
+      hospital.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      hospital.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      hospital.bloodTypes.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  }, [hospitals, searchTerm])
+
   const handleHospitalSelect = (hospital) => {
     navigate('/schedule', { state: { selectedHospital: hospital } })
   }
@@ -33,11 +42,18 @@ export default function DonationCenter() {
       <Header />
       
       <main className="flex-grow max-w-[1920px] mx-auto px-6 py-8">
-        <h1 className="text-2xl font-bold text-center mb-8">
-          <span className="bg-gray-100 px-8 py-2 rounded-full">
-            Select Donation Center
-          </span>
-        </h1>
+        <div className="flex justify-center mb-8">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Select Donation Center"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-80 py-2 px-8 bg-gray-100 text-xl font-bold text-center rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 placeholder-opacity-75"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          </div>
+        </div>
 
         <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
           <table className="w-full border-collapse">
@@ -52,7 +68,7 @@ export default function DonationCenter() {
               </tr>
             </thead>
             <tbody>
-              {hospitals.map((hospital, index) => (
+              {filteredHospitals.map((hospital, index) => (
                 <tr 
                   key={index}
                   onClick={() => handleHospitalSelect(hospital)}
@@ -72,6 +88,17 @@ export default function DonationCenter() {
           </table>
         </div>
       </main>
+
+      <div className="max-w-[1920px] mx-auto px-6 py-4 flex justify-between items-center">
+        <Link to="/booking" className="flex items-center text-gray-600">
+          <ChevronLeft className="w-5 h-5" />
+          <span className="ml-2">BACK</span>
+        </Link>
+        <button className="flex items-center text-gray-600">
+          <span className="mr-2">CONFIRM</span>
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
     </div>
   )
 }
