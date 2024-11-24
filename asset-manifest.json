@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/Frontend_Bloodbank/static/css/main.cdcd3bb2.css",
-    "main.js": "/Frontend_Bloodbank/static/js/main.c66d8c69.js",
-    "static/media/CoverPreviehomepage.png": "/Frontend_Bloodbank/static/media/CoverPreviehomepage.27b95622ba252c18bcfe.png",
-    "static/media/Maten.png": "/Frontend_Bloodbank/static/media/Maten.0345a8c20bf93bd34785.png",
-    "static/media/coverAboutus.png": "/Frontend_Bloodbank/static/media/coverAboutus.545e4614d2efc970c305.png",
-    "static/media/CoverJoinus.png": "/Frontend_Bloodbank/static/media/CoverJoinus.1f8ad148defee04e239b.png",
-    "static/media/2nd.png": "/Frontend_Bloodbank/static/media/2nd.651b4bc71590865016ba.png",
-    "static/media/1st.png": "/Frontend_Bloodbank/static/media/1st.332eef46c41c500ca41a.png",
-    "static/media/Arvin.png": "/Frontend_Bloodbank/static/media/Arvin.4c15cedc6640ba4b6ae3.png",
-    "static/media/cover.png": "/Frontend_Bloodbank/static/media/cover.80d432bbfed834f7ba28.png",
-    "static/media/Miguel.png": "/Frontend_Bloodbank/static/media/Miguel.e7f9cd8b2a482d7b8771.png",
-    "static/media/Aki.png": "/Frontend_Bloodbank/static/media/Aki.8ee75307b1f2a9534357.png",
-    "static/media/Lince.png": "/Frontend_Bloodbank/static/media/Lince.b1e4a9fe787cd5dde665.png",
-    "static/media/LogoSignup.png": "/Frontend_Bloodbank/static/media/LogoSignup.1fe4e7106166041ad4b3.png",
-    "index.html": "/Frontend_Bloodbank/index.html",
-    "main.cdcd3bb2.css.map": "/Frontend_Bloodbank/static/css/main.cdcd3bb2.css.map",
-    "main.c66d8c69.js.map": "/Frontend_Bloodbank/static/js/main.c66d8c69.js.map"
+    "main.css": "/homepage/static/css/main.cdcd3bb2.css",
+    "main.js": "/homepage/static/js/main.ddb91609.js",
+    "static/media/CoverPreviehomepage.png": "/homepage/static/media/CoverPreviehomepage.27b95622ba252c18bcfe.png",
+    "static/media/Maten.png": "/homepage/static/media/Maten.0345a8c20bf93bd34785.png",
+    "static/media/coverAboutus.png": "/homepage/static/media/coverAboutus.545e4614d2efc970c305.png",
+    "static/media/CoverJoinus.png": "/homepage/static/media/CoverJoinus.1f8ad148defee04e239b.png",
+    "static/media/2nd.png": "/homepage/static/media/2nd.651b4bc71590865016ba.png",
+    "static/media/1st.png": "/homepage/static/media/1st.332eef46c41c500ca41a.png",
+    "static/media/Arvin.png": "/homepage/static/media/Arvin.4c15cedc6640ba4b6ae3.png",
+    "static/media/cover.png": "/homepage/static/media/cover.80d432bbfed834f7ba28.png",
+    "static/media/Miguel.png": "/homepage/static/media/Miguel.e7f9cd8b2a482d7b8771.png",
+    "static/media/Aki.png": "/homepage/static/media/Aki.8ee75307b1f2a9534357.png",
+    "static/media/Lince.png": "/homepage/static/media/Lince.b1e4a9fe787cd5dde665.png",
+    "static/media/LogoSignup.png": "/homepage/static/media/LogoSignup.1fe4e7106166041ad4b3.png",
+    "index.html": "/homepage/index.html",
+    "main.cdcd3bb2.css.map": "/homepage/static/css/main.cdcd3bb2.css.map",
+    "main.ddb91609.js.map": "/homepage/static/js/main.ddb91609.js.map"
   },
   "entrypoints": [
     "static/css/main.cdcd3bb2.css",
-    "static/js/main.c66d8c69.js"
+    "static/js/main.ddb91609.js"
   ]
 }
