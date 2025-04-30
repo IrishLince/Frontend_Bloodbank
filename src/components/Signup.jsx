@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Background from './Background';
 import flagLogo from '../assets/Logophonenumber.png';
@@ -8,36 +8,51 @@ import LogoSignup from '../assets/LogoSignup.png';
 export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
-    address: '',
+    name: '',
     email: '',
-    bloodGroup: '',
-    phoneNumber: '',
     password: '',
+    contactInformation: '',
     dateOfBirth: '',
-    gender: ''
+    bloodType: '',
+    profilePicture: 'profile.png'
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [previewImage, setPreviewImage] = useState(null);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
 
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        profilePicture: file.name
+      }));
+
+      // Create a preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.fullName.trim()) newErrors.fullName = "Required";
-    if (!formData.address.trim()) newErrors.address = "Required";
+    if (!formData.name.trim()) newErrors.name = "Required";
     if (!formData.email.trim()) newErrors.email = "Required";
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email";
-    if (!formData.bloodGroup) newErrors.bloodGroup = "Required";
-    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Required";
-    else if (!/^\d{10}$/.test(formData.phoneNumber)) newErrors.phoneNumber = "10 digits required";
+    if (!formData.bloodType) newErrors.bloodType = "Required";
+    if (!formData.contactInformation.trim()) newErrors.contactInformation = "Required";
+    else if (!/^\d{10}$/.test(formData.contactInformation)) newErrors.contactInformation = "10 digits required";
     if (!formData.password.trim()) newErrors.password = "Required";
     else if (formData.password.length < 8) newErrors.password = "Min 8 characters";
     if (!formData.dateOfBirth) newErrors.dateOfBirth = "Required";
-    if (!formData.gender) newErrors.gender = "Required";
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -75,36 +90,51 @@ export default function Signup() {
         </div>
         <form onSubmit={handleSubmit} className="w-full max-w-4xl p-4 bg-white rounded-lg shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Profile Picture Upload */}
+            <div className="md:col-span-2 flex flex-col items-center justify-center mb-4">
+              <label className="block text-gray-700 text-xs font-medium mb-2">
+                Profile Picture
+              </label>
+              <div className="flex flex-col items-center">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 mb-2">
+                  {previewImage ? (
+                    <img src={previewImage} alt="Profile preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500 text-xs">No image</span>
+                    </div>
+                  )}
+                </div>
+                <label className="cursor-pointer flex items-center justify-center px-3 py-1.5 bg-gray-200 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-300 transition-colors duration-300">
+                  <Upload size={14} className="mr-1" />
+                  Upload Photo
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfilePictureChange}
+                    className="hidden"
+                  />
+                </label>
+                <p className="text-xs text-gray-500 mt-1">
+                  {formData.profilePicture !== 'profile.png' ? formData.profilePicture : 'Default profile.png'}
+                </p>
+              </div>
+            </div>
+
             <div>
-              <label htmlFor="fullName" className="block text-gray-700 text-xs font-medium mb-1">
+              <label htmlFor="name" className="block text-gray-700 text-xs font-medium mb-1">
                 Full Name
               </label>
               <input
                 type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
+                id="name"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                className={`w-full p-2 rounded-lg border ${errors.fullName ? 'border-red-500' : 'border-gray-300'} text-sm`}
+                className={`w-full p-2 rounded-lg border ${errors.name ? 'border-red-500' : 'border-gray-300'} text-sm`}
                 placeholder="Full name"
               />
-              {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="address" className="block text-gray-700 text-xs font-medium mb-1">
-                Address
-              </label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className={`w-full p-2 rounded-lg border ${errors.address ? 'border-red-500' : 'border-gray-300'} text-sm`}
-                placeholder="Address"
-              />
-              {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
 
             <div>
@@ -124,15 +154,15 @@ export default function Signup() {
             </div>
 
             <div>
-              <label htmlFor="bloodGroup" className="block text-gray-700 text-xs font-medium mb-1">
-                Blood Group
+              <label htmlFor="bloodType" className="block text-gray-700 text-xs font-medium mb-1">
+                Blood Type
               </label>
               <select
-                id="bloodGroup"
-                name="bloodGroup"
-                value={formData.bloodGroup}
+                id="bloodType"
+                name="bloodType"
+                value={formData.bloodType}
                 onChange={handleChange}
-                className={`w-full p-2 rounded-lg border ${errors.bloodGroup ? 'border-red-500' : 'border-gray-300'} text-sm`}
+                className={`w-full p-2 rounded-lg border ${errors.bloodType ? 'border-red-500' : 'border-gray-300'} text-sm`}
               >
                 <option value="">SELECT</option>
                 <option value="A+">A+</option>
@@ -144,11 +174,11 @@ export default function Signup() {
                 <option value="O+">O+</option>
                 <option value="O-">O-</option>
               </select>
-              {errors.bloodGroup && <p className="text-red-500 text-xs mt-1">{errors.bloodGroup}</p>}
+              {errors.bloodType && <p className="text-red-500 text-xs mt-1">{errors.bloodType}</p>}
             </div>
 
             <div>
-              <label htmlFor="phoneNumber" className="block text-gray-700 text-xs font-medium mb-1">
+              <label htmlFor="contactInformation" className="block text-gray-700 text-xs font-medium mb-1">
                 Contact Number
               </label>
               <div className="flex">
@@ -158,16 +188,16 @@ export default function Signup() {
                 </div>
                 <input
                   type="tel"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
+                  id="contactInformation"
+                  name="contactInformation"
+                  value={formData.contactInformation}
                   onChange={handleChange}
-                  className={`flex-1 p-2 rounded-r-lg border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-300'} text-sm`}
+                  className={`flex-1 p-2 rounded-r-lg border ${errors.contactInformation ? 'border-red-500' : 'border-gray-300'} text-sm`}
                   placeholder="Phone number"
                   maxLength={10}
                 />
               </div>
-              {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber}</p>}
+              {errors.contactInformation && <p className="text-red-500 text-xs mt-1">{errors.contactInformation}</p>}
             </div>
 
             <div>
@@ -209,35 +239,6 @@ export default function Signup() {
               />
               {errors.dateOfBirth && <p className="text-red-500 text-xs mt-1">{errors.dateOfBirth}</p>}
             </div>
-
-            <div>
-              <span className="block text-gray-700 text-xs font-medium mb-1">Sex</span>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="male"
-                    checked={formData.gender === 'male'}
-                    onChange={handleChange}
-                    className="form-radio text-red-600 focus:ring-red-500 h-4 w-4"
-                  />
-                  <span className="ml-2 text-gray-700 text-xs">Male</span>
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="female"
-                    checked={formData.gender === 'female'}
-                    onChange={handleChange}
-                    className="form-radio text-red-600 focus:ring-red-500 h-4 w-4"
-                  />
-                  <span className="ml-2 text-gray-700 text-xs">Female</span>
-                </label>
-              </div>
-              {errors.gender && <p className="text-red-500 text-xs mt-1">{errors.gender}</p>}
-            </div>
           </div>
 
           <div className="mt-6 flex flex-col items-center">
@@ -264,4 +265,3 @@ export default function Signup() {
     </Background>
   );
 }
-
