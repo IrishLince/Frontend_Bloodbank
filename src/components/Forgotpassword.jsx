@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { IoArrowBack } from "react-icons/io5";
 import flagLogo from '../assets/Logophonenumber.png';
 import cover from '../assets/cover.png';
+import LogoSignup from '../assets/LogoSignup.png';
 import { useNavigate, useLocation } from 'react-router-dom';
+import RefreshLink from './RefreshLink';
+import { navigateWithRefresh } from '../utils/navigation';
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -83,12 +86,12 @@ const ForgotPassword = () => {
     if (step > 1) {
       setStep(step - 1);
     } else {
-      navigate('/login');
+      navigateWithRefresh('/login');
     }
   };
 
   const handleContinue = () => {
-    navigate('/login');
+    navigateWithRefresh('/login');
   };
 
   const backgroundStyle = {
@@ -101,15 +104,27 @@ const ForgotPassword = () => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center" style={backgroundStyle}>
       <div className="w-full max-w-md p-6 bg-pink-50 rounded-3xl shadow-xl mx-4">
-        {step !== 5 && (
-          <button
-            onClick={handleBack}
-            className="text-gray-800 mb-6 flex items-center hover:text-gray-600 transition-colors"
-            aria-label="Go back"
-          >
-            <IoArrowBack size={24} />
-          </button>
-        )}
+        <div className="flex items-center justify-between mb-6">
+          {step !== 5 && (
+            <button
+              onClick={handleBack}
+              className="text-gray-800 flex items-center hover:text-gray-600 transition-colors"
+              aria-label="Go back"
+            >
+              <IoArrowBack size={24} />
+            </button>
+          )}
+          
+          <RefreshLink to="/homepage" className="mx-auto">
+            <img 
+              src={LogoSignup} 
+              alt="BloodBank Logo" 
+              className="h-16 w-16 cursor-pointer hover:opacity-80 transition-opacity" 
+            />
+          </RefreshLink>
+          
+          <div className="w-6"></div> {/* Empty div for spacing */}
+        </div>
 
         {step < 4 && (
           <h1 className="text-2xl font-bold text-gray-800 mb-2">

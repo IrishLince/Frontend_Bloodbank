@@ -6,32 +6,34 @@ import favicon from './assets/Logo.png'; // Replace with your actual logo path
 import Home from './components/Home';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import ForgotPassword from './components/ForgotPassword';
+import ForgotPassword from './components/Forgotpassword';
 import AboutUs from './components/abousus';
 import SuccessfulLogin from './components/SuccesfulLogin';
-import DonationCenter from './components/onlineBooking/DonationCenter';
-import Schedule from './components/onlineBooking/Schedule';
-import EligibilityCheck from './components/onlineBooking/EligibilityCheck';
-import ConfirmAppointment from './components/onlineBooking/ConfirmAppointment';
-import AppointmentDetails from './components/onlineBooking/AppointmentDetails';
+import DonationCenter from './components/Donor/DonationCenter';
+import Schedule from './components/Donor/Schedule';
+import EligibilityCheck from './components/Donor/EligibilityCheck';
+import ConfirmAppointment from './components/Donor/ConfirmAppointment';
+import AppointmentDetails from './components/Donor/AppointmentDetails';
 
-import WelcomeMessage from './components/Request/WelcomeMessage'
-import NewRequest from './components/Request/NewRequest';
-import SuccessfulRequest from './components/Request/SuccessfulRequest';
-import RequestDetails from './components/Request/RequestDetails';
+import WelcomeMessage from './components/Hospital/WelcomeMessage'
+import NewRequest from './components/Hospital/NewRequest';
+import SuccessfulRequest from './components/Hospital/SuccessfulRequest';
+import RequestDetails from './components/Hospital/RequestDetails';
+import HospitalProfile from './components/Hospital/Profile';
 
 import { Layout } from './components/Layout';
-import ProfilePage from './components/DeleteProfile';
+import DonorProfile from './components/Donor/Profile';
 import FAQs from './components/FAQS'
+import DonationHistory from './components/Donor/DonationHistory'; 
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-import HospitalList from './components/Hospital_BloodbankAdmin/HospitalList';
-import RequestList from './components/Hospital_BloodbankAdmin/RequestList';
-import ScheduleBloodbank from './components/Hospital_BloodbankAdmin/Schedule';
-// import Inventory from './components/Hospital_BloodbankAdmin/Inventory';
-import RequestSheet from './components/Hospital_BloodbankAdmin/RequestSheet';
+import HospitalList from './components/RedsourceAdmin/HospitalList';
+import RequestList from './components/RedsourceAdmin/RequestList';
+import ScheduleBloodbank from './components/RedsourceAdmin/Schedule';
+import RequestSheet from './components/RedsourceAdmin/RequestSheet';
+import AdminProfile from './components/RedsourceAdmin/Profile';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -125,7 +127,7 @@ function App() {
                 {/* Common routes for all authenticated users */}
                 <Route path="/successful-login" element={<SuccessfulLogin />} />
                 <Route path="/about-us" element={<AboutUs />} />
-                <Route path="/profile-page" element={<ProfilePage />} />
+                
 
                 {/* Donor-specific routes */} 
                 {userRole === 'Donor' && (
@@ -135,6 +137,8 @@ function App() {
                     <Route path="/eligibility" element={<EligibilityCheck />} />
                     <Route path="/confirm-appointment" element={<ConfirmAppointment />} />
                     <Route path="/appointment-details" element={<AppointmentDetails />} />
+                    <Route path="/donation-history" element={<DonationHistory />} />
+                    <Route path="/profile-page" element={<DonorProfile />} />
                   </>
                 )}
 
@@ -146,6 +150,7 @@ function App() {
                     <Route path="/successful-request" element={<SuccessfulRequest />} />
                     <Route path="/request-details" element={<RequestDetails />} />
                     <Route path="/welcome-message" element={<WelcomeMessage />} /> 
+                    <Route path="/profile-page" element={<HospitalProfile />} />
                   </>
                 )}
 
@@ -156,6 +161,7 @@ function App() {
                     <Route path="/requests" element={<RequestList />} />
                     <Route path="/schedule" element={<ScheduleBloodbank />} />
                     <Route path="/request-sheet" element={<RequestSheet />} />
+                    <Route path="/profile-page" element={<AdminProfile />} />
                   </>
                 )}
               </>

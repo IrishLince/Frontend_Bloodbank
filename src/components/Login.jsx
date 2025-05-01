@@ -3,6 +3,8 @@ import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import LogoSignup from '../assets/LogoSignup.png';
 import { useNavigate } from 'react-router-dom';
 import Background from './Background';
+import RefreshLink from './RefreshLink';
+import { navigateWithRefresh } from '../utils/navigation';
 
 const Login = ({ setIsLoggedIn }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +33,7 @@ const Login = ({ setIsLoggedIn }) => {
       localStorage.setItem('email', 'user@donor.com');
       localStorage.setItem('userRole', 'Donor');
       setIsLoggedIn(true);
-      navigate('/successful-login');
+      navigateWithRefresh('/successful-login');
     } 
     else if (username === 'Hospital' && password === '12345') {
       localStorage.setItem('userToken', 'hospital-token');
@@ -39,7 +41,7 @@ const Login = ({ setIsLoggedIn }) => {
       localStorage.setItem('email', 'admin@hospital.com');
       localStorage.setItem('userRole', 'Hospital');
       setIsLoggedIn(true);
-      navigate('/successful-login');
+      navigateWithRefresh('/successful-login');
     }
     else if (username === 'RedsourceAdmin' && password === '12345') {
       localStorage.setItem('userToken', 'bloodbank-admin-token');
@@ -47,7 +49,7 @@ const Login = ({ setIsLoggedIn }) => {
       localStorage.setItem('email', 'admin@bloodbank.com');
       localStorage.setItem('userRole', 'BloodBankAdmin');
       setIsLoggedIn(true);
-      navigate('/successful-login');
+      navigateWithRefresh('/successful-login');
     }
     else {
       setError('Invalid username or password');
@@ -64,11 +66,13 @@ const Login = ({ setIsLoggedIn }) => {
       <div className="min-h-full w-full flex items-center justify-center">
         <div className="max-w-md w-full space-y-8 bg-white p-10">
           <div className="text-center">
-            <img 
-              src={LogoSignup} 
-              alt="Blood Bank Logo" 
-              className="mx-auto h-24 w-24 mb-4"
-            />
+            <RefreshLink to="/homepage">
+              <img 
+                src={LogoSignup} 
+                alt="Blood Bank Logo" 
+                className="mx-auto h-24 w-24 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+              />
+            </RefreshLink>
           </div>
 
           {error && (
@@ -145,13 +149,12 @@ const Login = ({ setIsLoggedIn }) => {
               </div>
 
               <div className="text-sm">
-                <button
-                  type="button"
-                  onClick={() => navigate('/forgot-password')}
+                <RefreshLink
+                  to="/forgot-password"
                   className="font-medium text-red-600 hover:text-red-500"
                 >
                   Forgot your password?
-                </button>
+                </RefreshLink>
               </div>
             </div>
 
@@ -168,12 +171,12 @@ const Login = ({ setIsLoggedIn }) => {
           <div className="mt-6 text-center">
             <div className="text-sm">
               <span className="text-gray-600">Don't have an account? </span>
-              <button
-                onClick={() => navigate('/signup')}
+              <RefreshLink
+                to="/signup"
                 className="font-medium text-red-600 hover:text-red-500"
               >
                 Sign up
-              </button>
+              </RefreshLink>
             </div>
           </div>
         </div>

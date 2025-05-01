@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../assets/Logo.png';
 import Header from '../Header';
+import RefreshLink from '../RefreshLink';
+import { navigateWithRefresh } from '../../utils/navigation';
 
 export default function SuccessfulRequest() {
   const [countdown, setCountdown] = useState(30);
@@ -45,7 +47,7 @@ export default function SuccessfulRequest() {
       setCountdown((prev) => {
         if (prev === 1) {
           clearInterval(timer);
-          navigate('/'); 
+          navigateWithRefresh('/'); 
         }
         return prev - 1;
       });
@@ -70,7 +72,21 @@ export default function SuccessfulRequest() {
     setFormError(false);
     setIsSubmitted(true);
     setButtonStyle('bg-[#A81A1A] opacity-50');
-    navigate('/successful-request', {
+    navigateWithRefresh('/successful-request', {
+      state: {
+        bloodType,
+        unitsRequested,
+        requestDate,
+        dateNeeded,
+        hospitalName,
+        hospitalAddress,
+        contactInformation,
+      },
+    });
+  };
+
+  const handleNavigateToDetails = () => {
+    navigateWithRefresh('/request-details', {
       state: {
         bloodType,
         unitsRequested,
@@ -104,26 +120,16 @@ export default function SuccessfulRequest() {
               You have successfully submitted your request, which is now pending for approval.
             </p>
             <div className="flex justify-center mt-6">
-            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
-    <img src={logo} alt="Logo" className="w-8 h-8" />
-  </div>
+              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                <RefreshLink to="/homepage">
+                  <img src={logo} alt="Logo" className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity" />
+                </RefreshLink>
+              </div>
             </div>
             <div className="flex justify-center mt-6">
               <button
                 className="bg-[#C91C1C] text-white py-2 px-6 rounded-lg font-semibold hover:bg-[#A81A1A]"
-                onClick={() =>
-                  navigate('/request-details', {
-                    state: {
-                      bloodType,
-                      unitsRequested,
-                      requestDate,
-                      dateNeeded,
-                      hospitalName,
-                      hospitalAddress,
-                      contactInformation,
-                    },
-                  })
-                }
+                onClick={handleNavigateToDetails}
               >
                 CONTINUE
               </button>

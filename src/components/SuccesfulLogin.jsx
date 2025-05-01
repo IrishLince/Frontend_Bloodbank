@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Header from './Header';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/CoverPreviehomepage.png';
 import { useTypingEffect } from './useTypingEffect';
+import RefreshLink from './RefreshLink';
+import { navigateWithRefresh } from '../utils/navigation';
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -12,6 +14,11 @@ const textVariants = {
 
 const SuccessfulLogin = () => {
   const typedText = useTypingEffect("It's a gift that lasts a lifetime.", 50);
+  const navigate = useNavigate();
+
+  const handleDonateClick = () => {
+    navigateWithRefresh('/donation-center');
+  };
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
@@ -60,12 +67,12 @@ const SuccessfulLogin = () => {
           <motion.div
             variants={textVariants}
           >
-            <Link
-              onClick={() => window.location.href = '/donation-center'}
+            <button
+              onClick={handleDonateClick}
               className="inline-block bg-[#f9f9f9] text-red-800 hover:bg-gray-100 hover:text-red-700 px-6 sm:px-8 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105"
             >
               DONATE NOW
-            </Link>
+            </button>
           </motion.div>
         </motion.div>
       </div>

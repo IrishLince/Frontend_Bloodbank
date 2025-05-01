@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import logo from '../../assets/Logo.png';
 import Header from '../Header'
+import RefreshLink from '../RefreshLink'
+import { navigateWithRefresh } from '../../utils/navigation'
 
 export default function ConfirmAppointment() {
   const location = useLocation()
@@ -38,12 +40,12 @@ export default function ConfirmAppointment() {
   }
 
   const handleCancel = () => {
-    navigate('/')
+    navigateWithRefresh('/')
   }
 
   const handleCloseSuccess = () => {
     setShowSuccess(false)
-    navigate('/appointment-details', {
+    navigateWithRefresh('/appointment-details', {
       state: {
         donorInfo,
         appointmentDetails: {
@@ -62,13 +64,13 @@ export default function ConfirmAppointment() {
 
       <main className="max-w-[1920px] mx-auto px-6 py-8">
         <div className="flex justify-between items-center mb-8">
-          <Link 
+          <RefreshLink 
             to="/eligibility" 
             className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
             <span>BACK</span>
-          </Link>
+          </RefreshLink>
           <button 
             onClick={handleSubmit}
             className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors"
@@ -220,7 +222,9 @@ export default function ConfirmAppointment() {
               <div className="w-32 h-32 mx-auto mb-6 relative">
                 <div className="w-full h-full bg-[#C91C1C] rounded-full flex items-center justify-center">
                   <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
-                  <img src={logo} alt="Logo" className="w-12 h-12" />
+                    <RefreshLink to="/homepage">
+                      <img src={logo} alt="Logo" className="w-12 h-12 cursor-pointer hover:opacity-80 transition-opacity" />
+                    </RefreshLink>
                   </div>
                 </div>
               </div>

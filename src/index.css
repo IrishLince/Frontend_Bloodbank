@@ -14,3 +14,23 @@
 .placeholder-bg {
   background-color: #e9ecef; /* Light gray background */
 }
+
+/* Add a rule for the force-repaint class */
+.force-repaint {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Ensure elements don't flicker during transitions */
+* {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Make scrolling smooth */
+html {
+  scroll-behavior: smooth;
+}

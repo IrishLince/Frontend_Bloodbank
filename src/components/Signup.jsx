@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Background from './Background';
 import flagLogo from '../assets/Logophonenumber.png';
 import LogoSignup from '../assets/LogoSignup.png';
+import RefreshLink from './RefreshLink';
+import { navigateWithRefresh } from '../utils/navigation';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -64,7 +66,7 @@ export default function Signup() {
       try {
         console.log("Form submitted:", formData);
         await new Promise(resolve => setTimeout(resolve, 1000));
-        navigate('/login');
+        navigateWithRefresh('/login');
       } catch (error) {
         console.error("Error submitting form:", error);
       }
@@ -86,7 +88,13 @@ export default function Signup() {
     <Background>
       <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 py-8">
         <div className="mb-4">
-          <img src={LogoSignup} alt="BloodBank Logo" className="w-20 h-20" />
+          <RefreshLink to="/homepage">
+            <img 
+              src={LogoSignup} 
+              alt="BloodBank Logo" 
+              className="w-20 h-20 cursor-pointer hover:opacity-80 transition-opacity" 
+            />
+          </RefreshLink>
         </div>
         <form onSubmit={handleSubmit} className="w-full max-w-4xl p-4 bg-white rounded-lg shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -251,13 +259,12 @@ export default function Signup() {
 
             <p className="mt-4 text-xs text-gray-600">
               Already have an account?{' '}
-              <button
-                type="button"
-                onClick={() => navigate('/login')}
+              <RefreshLink
+                to="/login"
                 className="text-red-600 hover:text-red-700 font-medium transition-colors duration-200"
               >
                 Login here
-              </button>
+              </RefreshLink>
             </p>
           </div>
         </form>
