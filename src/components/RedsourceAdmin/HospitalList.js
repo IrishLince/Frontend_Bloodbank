@@ -4,7 +4,6 @@ import Header from '../Header'
 import { 
   FiTruck, 
   FiPackage, 
-  FiAlertTriangle, 
   FiCalendar, 
   FiFilter, 
   FiRefreshCw, 
@@ -20,8 +19,7 @@ import {
   FiArrowRight,
   FiMenu,
   FiChevronRight,
-  FiDatabase,
-  FiStar
+  FiDatabase
 } from 'react-icons/fi'
 
 export default function HospitalList() {
@@ -78,7 +76,7 @@ export default function HospitalList() {
       phone: "(555) 555-7777",
       bloodTypes: "O-, AB+, A+, B-",
       requests: 4,
-      deliveryStatus: "Urgent"
+      deliveryStatus: "Pending"
     },
     {
       name: "Sunrise Healthcare Facility",
@@ -105,7 +103,6 @@ export default function HospitalList() {
       date: "2023-08-18",
       status: "Scheduled",
       items: "O+ (5 units), A+ (3 units)",
-      priority: "Normal",
       estimatedTime: "3:00 PM"
     },
     {
@@ -114,7 +111,6 @@ export default function HospitalList() {
       date: "2023-08-19",
       status: "Pending",
       items: "AB+ (2 units), O- (1 unit)",
-      priority: "High",
       estimatedTime: "10:30 AM"
     },
     {
@@ -123,16 +119,14 @@ export default function HospitalList() {
       date: "2023-08-17",
       status: "In Transit",
       items: "A- (4 units)",
-      priority: "Normal",
       estimatedTime: "1:15 PM"
     },
     {
       id: "DEL-1004",
       hospital: "Lakeside General Hospital",
       date: "2023-08-16",
-      status: "Urgent",
+      status: "Pending",
       items: "O- (3 units), B- (2 units)",
-      priority: "Critical",
       estimatedTime: "ASAP"
     }
   ]
@@ -151,7 +145,6 @@ export default function HospitalList() {
       case 'In Transit': return 'bg-blue-100 text-blue-800 border-blue-200'
       case 'Scheduled': return 'bg-purple-100 text-purple-800 border-purple-200'
       case 'Pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-      case 'Urgent': return 'bg-red-100 text-red-800 border-red-200'
       default: return 'bg-gray-100 text-gray-800 border-gray-200'
     }
   }
@@ -162,21 +155,10 @@ export default function HospitalList() {
       case 'In Transit': return <FiTruck className="mr-1.5" />
       case 'Scheduled': return <FiCalendar className="mr-1.5" />
       case 'Pending': return <FiClock className="mr-1.5" />
-      case 'Urgent': return <FiAlertTriangle className="mr-1.5" />
       default: return null
     }
   }
 
-  const getPriorityColor = (priority) => {
-    switch(priority) {
-      case 'Critical': return 'bg-red-100 text-red-800 border-red-200'
-      case 'High': return 'bg-orange-100 text-orange-800 border-orange-200'
-      case 'Normal': return 'bg-green-100 text-green-800 border-green-200'
-      default: return 'bg-gray-100 text-gray-800 border-gray-200'
-    }
-  }
-
-  // Filter hospitals by status and search term
   const filteredHospitals = hospitals
     .filter(h => filterStatus === 'all' || h.deliveryStatus === filterStatus)
     .filter(h => 
@@ -186,7 +168,6 @@ export default function HospitalList() {
       h.bloodTypes.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
-  // Filter deliveries by status and search term
   const filteredDeliveries = deliveries
     .filter(d => filterStatus === 'all' || d.status === filterStatus)
     .filter(d => 
@@ -195,12 +176,10 @@ export default function HospitalList() {
       d.id.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
-  // Format blood types with badges
   const formatBloodTypes = (bloodTypesStr) => {
     return bloodTypesStr.split(', ').map((type, index) => {
       let bgColor;
       
-      // Assign colors based on blood type
       if (type.includes('O-')) bgColor = 'bg-red-100 text-red-800';
       else if (type.includes('O+')) bgColor = 'bg-red-50 text-red-800';
       else if (type.includes('A-')) bgColor = 'bg-blue-100 text-blue-800';
@@ -222,7 +201,6 @@ export default function HospitalList() {
     });
   }
 
-  // For demonstration, let's add the responsive mobile view toggle
   const toggleMobileFilters = () => {
     setMobileFilterVisible(!mobileFilterVisible);
   }
@@ -323,7 +301,6 @@ export default function HospitalList() {
               onChange={(e) => setFilterStatus(e.target.value)}
             >
               <option value="all">All Statuses</option>
-              <option value="Urgent">Urgent</option>
               <option value="Pending">Pending</option>
               <option value="Scheduled">Scheduled</option>
               <option value="In Transit">In Transit</option>
@@ -419,7 +396,7 @@ export default function HospitalList() {
                     <th className="text-left p-4 lg:p-5 border-b font-semibold">Location</th>
                     <th className="text-left p-4 lg:p-5 border-b font-semibold">Blood Types</th>
                     <th className="text-left p-4 lg:p-5 border-b font-semibold">Units</th>
-                    <th className="text-left p-4 lg:p-5 border-b font-semibold">Delivery Status</th>
+                    <th className="text-left p-4 lg:p-5 border-b font-semibold">Request Status</th>
                     <th className="p-4 lg:p-5 border-b text-center font-semibold">Actions</th>
                   </tr>
                 </thead>
@@ -492,22 +469,7 @@ export default function HospitalList() {
         {activeTab === 'deliveries' && (
           <>
             {/* Enhanced Stats Cards for Desktop */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8">
-              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-xl shadow-sm hover:shadow-lg cursor-pointer transition-all flex items-center border-l-4 border-red-500">
-                <div className="p-2 sm:p-3 lg:p-4 rounded-full bg-red-100 mr-3 sm:mr-4">
-                  <FiAlertTriangle className="text-red-600 text-lg sm:text-xl lg:text-2xl" />
-                </div>
-                <div>
-                  <div className="text-xs sm:text-sm lg:text-base text-gray-500 font-medium">Urgent Deliveries</div>
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
-                    {deliveries.filter(d => d.status === 'Urgent').length}
-                  </div>
-                </div>
-                <div className="ml-auto hidden lg:flex">
-                  <FiChevronRight className="text-gray-400 w-6 h-6" />
-                </div>
-              </div>
-              
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-6 mb-8">              
               <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-xl shadow-sm hover:shadow-lg cursor-pointer transition-all flex items-center border-l-4 border-yellow-500">
                 <div className="p-2 sm:p-3 lg:p-4 rounded-full bg-yellow-100 mr-3 sm:mr-4">
                   <FiPackage className="text-yellow-600 text-lg sm:text-xl lg:text-2xl" />
@@ -555,7 +517,7 @@ export default function HospitalList() {
             </div>
             
             {/* Additional Desktop Dashboard Elements */}
-            <div className="hidden lg:grid grid-cols-2 gap-6 mb-8">
+            <div className="hidden lg:grid grid-cols-1 gap-6 mb-8">
               <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold flex items-center text-gray-800">
@@ -586,34 +548,6 @@ export default function HospitalList() {
                       </div>
                       <div className="text-2xl font-bold">{Math.floor(Math.random() * 25) + 5}</div>
                       <div className="text-xs text-gray-500">Available units</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold flex items-center text-gray-800">
-                    <FiStar className="mr-2 text-yellow-500" /> Priority Hospitals
-                  </h3>
-                  <button className="text-blue-600 text-sm hover:text-blue-800">View All</button>
-                </div>
-                
-                <div className="space-y-4">
-                  {hospitals.filter(h => h.deliveryStatus === 'Urgent' || h.deliveryStatus === 'Pending')
-                    .slice(0, 3).map((hospital, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
-                      <div>
-                        <div className="font-medium">{hospital.name}</div>
-                        <div className="text-sm text-gray-500 flex items-center mt-1">
-                          <FiDroplet className="w-3 h-3 mr-1.5 text-red-500" />
-                          {hospital.bloodTypes}
-                        </div>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center border ${getStatusColor(hospital.deliveryStatus)}`}>
-                        {getStatusIcon(hospital.deliveryStatus)}
-                        {hospital.deliveryStatus}
-                      </span>
                     </div>
                   ))}
                 </div>
@@ -677,14 +611,6 @@ export default function HospitalList() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center mb-4">
-                      <div className="text-xs font-medium text-gray-500 mr-2">Priority:</div>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center border ${getPriorityColor(delivery.priority)}`}>
-                        {delivery.priority === 'Critical' && <FiAlertTriangle className="mr-1" />}
-                        {delivery.priority}
-                      </span>
-                    </div>
-                    
                     <div className="flex justify-end space-x-2">
                       <button 
                         className="px-3 py-1.5 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center shadow-sm"
@@ -719,8 +645,7 @@ export default function HospitalList() {
                       <th className="text-left p-4 lg:p-5 border-b font-semibold">Hospital</th>
                       <th className="text-left p-4 lg:p-5 border-b font-semibold">Blood Products</th>
                       <th className="text-left p-4 lg:p-5 border-b font-semibold">Date & Time</th>
-                      <th className="text-left p-4 lg:p-5 border-b font-semibold">Priority</th>
-                      <th className="text-left p-4 lg:p-5 border-b font-semibold">Status</th>
+                      <th className="text-left p-4 lg:p-5 border-b font-semibold">Request Status</th>
                       <th className="p-4 lg:p-5 border-b text-center font-semibold">Actions</th>
                     </tr>
                   </thead>
@@ -749,12 +674,6 @@ export default function HospitalList() {
                               <FiClock className="w-3.5 h-3.5 mr-1.5" />
                               {delivery.estimatedTime}
                             </div>
-                          </td>
-                          <td className="p-4 lg:p-5">
-                            <span className={`px-2.5 py-1 lg:px-3 lg:py-1.5 rounded-full text-xs lg:text-sm font-medium inline-flex items-center border ${getPriorityColor(delivery.priority)}`}>
-                              {delivery.priority === 'Critical' && <FiAlertTriangle className="mr-1.5" />}
-                              {delivery.priority}
-                            </span>
                           </td>
                           <td className="p-4 lg:p-5">
                             <span className={`px-2.5 py-1 lg:px-3 lg:py-1.5 rounded-full text-xs lg:text-sm font-medium inline-flex items-center border ${getStatusColor(delivery.status)}`}>
