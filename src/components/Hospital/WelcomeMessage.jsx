@@ -61,7 +61,7 @@ const WelcomeMessage = () => {
               <FiTruck className="text-blue-600 text-xl" />
             </div>
           </div>
-          <button className="text-blue-600 text-sm mt-4 inline-block">Track deliveries</button>
+          <Link to="/Track-Deliveries" className="text-blue-600 text-sm mt-4 inline-block">Track deliveries</Link>
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
