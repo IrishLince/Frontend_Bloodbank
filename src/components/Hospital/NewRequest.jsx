@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { ChevronLeft, CheckCircle, AlertCircle, Info, Calendar, Droplet, Building, Phone, User, Package, ChevronDown } from 'lucide-react';
 import Header from '../Header';
 
 export default function NewRequest() {
@@ -149,88 +149,151 @@ export default function NewRequest() {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="bg-gradient-to-b from-white to-[#FFF5F5] flex flex-col min-h-screen">
+    <div className="bg-gray-50 flex flex-col min-h-screen">
       <Header />
 
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6 py-6">
-        <Link to="/welcome-message" className="inline-flex">
-          <button className="flex items-center text-[#C91C1C] hover:text-[#A81A1A] transition-colors text-sm font-medium bg-white rounded-full py-2 px-4 shadow-sm">
-            <ChevronLeft className="mr-1 w-4 h-4" /> BACK
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 py-4 sm:py-6">
+        <Link to="/welcome-message" className="inline-flex mb-4 sm:mb-6">
+          <button className="flex items-center text-red-600 hover:text-red-800 transition-colors text-sm font-medium bg-white rounded-lg py-1.5 sm:py-2 px-3 sm:px-4 shadow-sm border border-gray-100">
+            <ChevronLeft className="mr-1 w-4 h-4" /> Back to Dashboard
           </button>
         </Link>
 
-        <div className="flex justify-center my-6">
-          <div className="bg-gradient-to-r from-[#FFE7E7] to-[#F2F2F2] shadow-md p-4 rounded-full w-full sm:w-[50%] lg:w-[35%] text-center">
-            <h1 className="text-[#C91C1C] text-xl font-bold">New Blood Request</h1>
+        <div className="flex justify-center mb-5 sm:mb-8">
+          <div className="bg-gradient-to-r from-red-100 to-red-50 shadow-md p-4 sm:p-5 rounded-xl w-full max-w-3xl border border-red-200">
+            <h1 className="text-xl sm:text-2xl font-bold text-red-800 text-center">New Blood Request</h1>
+            <p className="text-red-600 text-center mt-1 text-sm sm:text-base">Request blood supplies for your hospital</p>
           </div>
         </div>
 
         <div className="flex justify-center items-start">
-          <div className="bg-white shadow-lg rounded-2xl w-full sm:w-[80%] lg:w-[70%] overflow-hidden border border-[#FFD6D6]">
-            <div className="bg-[#C91C1C] text-white py-3 px-6 mb-4">
-              <h2 className="text-lg font-semibold">Request Details</h2>
-              <p className="text-sm opacity-75">Please provide the following information</p>
+          <div className="bg-white shadow-xl rounded-xl w-full max-w-4xl overflow-hidden border border-gray-200">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl font-bold">Request Details</h2>
+              <p className="text-xs sm:text-sm opacity-90">Please provide accurate information for your blood request</p>
             </div>
             
-            <div className="p-6 sm:p-8">
+            <div className="p-4 sm:p-6 md:p-8">
+              {formError && (
+                <div className="mb-4 sm:mb-6 bg-red-50 border-l-4 border-red-500 p-3 sm:p-4 rounded-md">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0">
+                      <AlertCircle className="h-5 w-5 text-red-500" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-red-800">Please correct the following errors:</h3>
+                      <ul className="mt-1 text-sm text-red-700 list-disc list-inside">
+                        {Object.values(errors).map((error, idx) => (
+                          <li key={idx}>{error}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               <div className="grid gap-6 sm:gap-8">
                 <div className="space-y-1">
-                  <label className="text-sm font-semibold text-gray-700">Hospital Name</label>
-                  <input
-                    type="text"
-                    className="w-full p-3 border border-gray-200 rounded-lg bg-[#F9F9F9] text-gray-700 font-medium shadow-inner"
-                    value="Riverside Community Medical Center"
-                    readOnly
-                  />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-700">Hospital Address</label>
-                    <input
-                      type="text"
-                      className="w-full p-3 border border-gray-200 rounded-lg bg-[#F9F9F9] text-gray-700 font-medium shadow-inner"
-                      value="456 River Ave., Townsville"
-                      readOnly
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-700">Contact Information</label>
-                    <input
-                      type="text"
-                      className="w-full p-3 border border-gray-200 rounded-lg bg-[#F9F9F9] text-gray-700 font-medium shadow-inner"
-                      value="(555) 987-6543"
-                      readOnly
-                    />
+                  <label className="text-sm font-semibold text-gray-700 flex items-center">
+                    <Building className="w-4 h-4 mr-2 text-gray-500" />
+                    Hospital Information
+                  </label>
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-200">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                      <div>
+                        <p className="text-xs sm:text-sm text-gray-500 mb-1">Hospital Name</p>
+                        <p className="font-medium text-gray-800 text-sm sm:text-base">Riverside Community Medical Center</p>
+                      </div>
+                      <div>
+                        <p className="text-xs sm:text-sm text-gray-500 mb-1">Contact Information</p>
+                        <p className="font-medium text-gray-800 text-sm sm:text-base">(555) 987-6543</p>
+                      </div>
+                      <div className="md:col-span-2">
+                        <p className="text-xs sm:text-sm text-gray-500 mb-1">Hospital Address</p>
+                        <p className="font-medium text-gray-800 text-sm sm:text-base">456 River Ave., Townsville</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="h-px bg-gray-200 my-2"></div>
-                
-                <div className="space-y-1">
-                  <label className="text-sm font-semibold text-gray-700">Blood Source</label>
+                <div className="space-y-2 sm:space-y-3">
+                  <label className="text-sm font-semibold text-gray-700 flex items-center">
+                    <User className="w-4 h-4 mr-2 text-gray-500" />
+                    Blood Source
+                  </label>
                   <div className="relative">
-                    <input
-                      type="text"
-                      className={`w-full p-3 border ${errors.bloodSource ? 'border-red-500' : 'border-gray-200'} rounded-lg cursor-pointer hover:border-[#C91C1C] transition-colors shadow-sm`}
-                      value={selectedAdmin ? selectedAdmin.name : "Select Blood Center"}
+                    <div 
+                      className={`w-full p-3 sm:p-3.5 border ${errors.bloodSource ? 'border-red-500' : 'border-gray-300'} rounded-lg cursor-pointer hover:border-red-500 transition-colors bg-white flex items-center justify-between`}
                       onClick={() => setShowAvailabilityModal(true)}
-                      readOnly
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <ChevronLeft className="rotate-270 w-4 h-4 transform rotate-90 text-[#C91C1C]" />
+                    >
+                      <span className={`text-sm sm:text-base ${selectedAdmin ? 'text-gray-800 font-medium' : 'text-gray-500'}`}>
+                        {selectedAdmin ? selectedAdmin.name : "Select Blood Center"}
+                      </span>
+                      <ChevronDown className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
                     </div>
                     {errors.bloodSource && (
                       <p className="text-red-500 text-xs mt-1">{errors.bloodSource}</p>
                     )}
                   </div>
+                  
+                  {/* Blood Center Modal */}
+                  {showAvailabilityModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                      <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 w-full max-w-3xl max-h-[80vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-3 sm:mb-4">
+                          <h3 className="text-base sm:text-lg font-bold text-gray-800">Select Blood Center</h3>
+                          <button 
+                            onClick={() => setShowAvailabilityModal(false)} 
+                            className="text-gray-500 hover:text-gray-700"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                        
+                        <div className="space-y-3 sm:space-y-4">
+                          {bloodAdminCenters.map((admin) => (
+                            <div 
+                              key={admin.id} 
+                              className={`p-3 sm:p-4 border ${selectedAdminId === admin.id ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-red-300'} rounded-lg cursor-pointer transition-all`}
+                              onClick={() => handleAdminSelect(admin.id)}
+                            >
+                              <div className="flex justify-between mb-1 sm:mb-2">
+                                <h4 className="font-medium text-gray-800 text-sm sm:text-base">{admin.name}</h4>
+                                {selectedAdminId === admin.id && (
+                                  <CheckCircle className="h-4 sm:h-5 w-4 sm:w-5 text-red-500" />
+                                )}
+                              </div>
+                              <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3">{admin.location}</p>
+                              
+                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+                                {admin.inventory.map((item) => (
+                                  <div 
+                                    key={item.type} 
+                                    className={`p-1.5 sm:p-2 rounded-md text-xs ${item.available > 0 ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'} flex flex-col items-center justify-center`}
+                                  >
+                                    <span className="font-bold text-xs sm:text-sm">{item.type}</span>
+                                    <span className="text-xs">{item.available} units</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-700">Blood Type</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="space-y-2 sm:space-y-3">
+                    <label className="text-sm font-semibold text-gray-700 flex items-center">
+                      <Droplet className="w-4 h-4 mr-2 text-gray-500" />
+                      Blood Type
+                    </label>
                     <select
-                      className={`w-full p-3 border ${errors.bloodType ? 'border-red-500' : 'border-gray-200'} rounded-lg shadow-sm ${!selectedAdminId ? 'bg-gray-100 text-gray-500' : 'bg-white text-gray-700'}`}
+                      className={`w-full p-3 sm:p-3.5 border ${errors.bloodType ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm ${!selectedAdminId ? 'bg-gray-100 text-gray-500' : 'bg-white text-gray-800'} focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base`}
                       value={bloodType}
                       onChange={handleBloodTypeChange}
                       disabled={!selectedAdminId}
@@ -257,167 +320,99 @@ export default function NewRequest() {
                     )}
                   </div>
                   
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-700">Units Requested</label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        className={`w-full p-3 border ${errors.unitsRequested ? 'border-red-500' : 'border-gray-200'} rounded-lg shadow-sm ${!bloodType ? 'bg-gray-100 text-gray-500' : 'bg-white text-gray-700'}`}
-                        value={unitsRequested}
-                        onChange={handleUnitsRequestedChange}
-                        placeholder="Enter Units"
-                        min="0"
-                        disabled={!bloodType}
-                      />
-                      {bloodType && (
-                        <div className="flex items-center text-xs text-gray-600 mt-1">
-                          <Info className="w-3 h-3 mr-1 text-blue-500" />
-                          Available: {getTotalAvailable(bloodType)} units
-                        </div>
-                      )}
-                      {errors.unitsRequested && (
-                        <p className="text-red-500 text-xs mt-1">{errors.unitsRequested}</p>
-                      )}
-                    </div>
+                  <div className="space-y-2 sm:space-y-3">
+                    <label className="text-sm font-semibold text-gray-700 flex items-center">
+                      <Package className="w-4 h-4 mr-2 text-gray-500" />
+                      Units Requested
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={unitsRequested}
+                      onChange={handleUnitsRequestedChange}
+                      disabled={!bloodType}
+                      className={`w-full p-3 sm:p-3.5 border ${errors.unitsRequested ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm ${!bloodType ? 'bg-gray-100 text-gray-500' : 'bg-white text-gray-800'} focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base`}
+                      placeholder="Enter number of units"
+                    />
+                    {errors.unitsRequested ? (
+                      <p className="text-red-500 text-xs mt-1">{errors.unitsRequested}</p>
+                    ) : (
+                      bloodType && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          <Info className="inline w-3 h-3 mr-1" />
+                          Maximum available: {getTotalAvailable(bloodType)} units
+                        </p>
+                      )
+                    )}
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-700">Request Date</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="space-y-2 sm:space-y-3">
+                    <label className="text-sm font-semibold text-gray-700 flex items-center">
+                      <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+                      Request Date
+                    </label>
                     <input
                       type="date"
-                      className={`w-full p-3 border ${errors.requestDate ? 'border-red-500' : 'border-gray-200'} rounded-lg shadow-sm`}
+                      min={today}
                       value={requestDate}
                       onChange={handleRequestDateChange}
-                      min={today}
+                      className={`w-full p-3 sm:p-3.5 border ${errors.requestDate ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base`}
                     />
                     {errors.requestDate && (
                       <p className="text-red-500 text-xs mt-1">{errors.requestDate}</p>
                     )}
                   </div>
                   
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-700">Date Needed</label>
+                  <div className="space-y-2 sm:space-y-3">
+                    <label className="text-sm font-semibold text-gray-700 flex items-center">
+                      <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+                      Date Needed
+                    </label>
                     <input
                       type="date"
-                      className={`w-full p-3 border ${errors.dateNeeded ? 'border-red-500' : 'border-gray-200'} rounded-lg shadow-sm`}
+                      min={today}
                       value={dateNeeded}
                       onChange={handleDateNeededChange}
-                      min={today}
+                      className={`w-full p-3 sm:p-3.5 border ${errors.dateNeeded ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base`}
                     />
                     {errors.dateNeeded && (
                       <p className="text-red-500 text-xs mt-1">{errors.dateNeeded}</p>
                     )}
                   </div>
                 </div>
-              </div>
-
-              {formError && (
-                <div className="mt-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm flex items-start">
-                  <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-medium">Please correct the following errors:</p>
-                    <ul className="list-disc list-inside mt-1 text-xs">
-                      {Object.values(errors).map((error, index) => (
-                        <li key={index}>{error}</li>
-                      ))}
-                    </ul>
+                
+                <div className="pt-2 sm:pt-4">
+                  <div className="bg-red-50 p-3 sm:p-4 rounded-lg border border-red-100 flex items-start mb-4 sm:mb-6">
+                    <Info className="text-red-600 w-4 sm:w-5 h-4 sm:h-5 mr-2 sm:mr-3 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-medium text-red-800">Important Information</h4>
+                      <p className="text-xs sm:text-sm text-red-700 mt-1">
+                        Please note that all blood requests require verification and processing time. For emergency requests, please contact the blood center directly.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-center">
+                    <button
+                      onClick={handleSubmit}
+                      disabled={!selectedAdminId || !bloodType || !unitsRequested || !requestDate || !dateNeeded}
+                      className={`px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-medium text-white text-sm sm:text-base
+                        ${(!selectedAdminId || !bloodType || !unitsRequested || !requestDate || !dateNeeded) 
+                          ? 'bg-gray-400 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transform hover:-translate-y-1 shadow-md hover:shadow-lg transition-all'
+                        }`}
+                    >
+                      Submit Request
+                    </button>
                   </div>
                 </div>
-              )}
-
-              <div className="flex justify-center items-center mt-8">
-                <button
-                  onClick={handleSubmit}
-                  className="bg-[#C91C1C] hover:bg-[#A81A1A] text-white py-3 px-8 rounded-lg font-semibold transition-colors shadow-md w-full sm:w-auto sm:min-w-[200px] flex items-center justify-center"
-                >
-                  SUBMIT REQUEST
-                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Blood Source Modal */}
-      {showAvailabilityModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl border-t-4 border-[#C91C1C]">
-            <div className="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-              <h2 className="text-xl font-bold text-[#C91C1C] flex items-center">
-                <span className="w-8 h-8 bg-[#C91C1C] text-white rounded-full flex items-center justify-center mr-2">
-                  <Info className="w-4 h-4" />
-                </span>
-                Select Blood Source
-              </h2>
-              <button 
-                onClick={() => setShowAvailabilityModal(false)}
-                className="text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="space-y-6">
-              {bloodAdminCenters.map(admin => (
-                <div 
-                  key={admin.id}
-                  className={`p-5 border-2 rounded-xl cursor-pointer hover:border-[#C91C1C] transition-all ${
-                    selectedAdminId === admin.id ? 'bg-[#FFF5F5] border-[#C91C1C]' : 'border-gray-200'
-                  }`}
-                  onClick={() => handleAdminSelect(admin.id)}
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <div className="font-bold text-lg text-gray-800">{admin.name}</div>
-                      <div className="text-gray-600 text-sm flex items-center">
-                        <Info className="w-3 h-3 mr-1" />
-                        {admin.location}
-                      </div>
-                    </div>
-                    {selectedAdminId === admin.id && (
-                      <div className="mt-2 sm:mt-0">
-                        <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full flex items-center w-fit">
-                          <CheckCircle className="w-3 h-3 mr-1" /> Selected
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                    {admin.inventory.map(item => (
-                      <div 
-                        key={item.type}
-                        className={`p-3 rounded-lg text-center flex flex-col items-center ${
-                          item.available > 0 
-                            ? 'bg-green-50 text-green-800 border border-green-100' 
-                            : 'bg-gray-50 text-gray-400 border border-gray-100'
-                        }`}
-                      >
-                        <div className="text-lg font-bold">{item.type}</div>
-                        <div className="text-sm mt-1">{item.available} units</div>
-                        {item.available === 0 && (
-                          <div className="text-xs mt-1 text-red-500">Unavailable</div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-8 pt-4 border-t border-gray-200 flex justify-end">
-              <button
-                onClick={() => setShowAvailabilityModal(false)}
-                className="bg-[#C91C1C] hover:bg-[#A81A1A] text-white py-2 px-6 rounded-lg font-semibold transition-colors shadow-md"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
