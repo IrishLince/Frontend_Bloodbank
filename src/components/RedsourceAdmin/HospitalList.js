@@ -516,43 +516,7 @@ export default function HospitalList() {
               </div>
             </div>
             
-            {/* Additional Desktop Dashboard Elements */}
-            <div className="hidden lg:grid grid-cols-1 gap-6 mb-8">
-              <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold flex items-center text-gray-800">
-                    <FiDatabase className="mr-2 text-blue-500" /> Blood Inventory
-                  </h3>
-                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Last Updated: Today</span>
-                </div>
-                
-                <div className="grid grid-cols-4 gap-3">
-                  {['O+', 'O-', 'A+', 'A-'].map(type => (
-                    <div key={type} className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                      <div className="flex items-center mb-1">
-                        <FiDroplet className="text-red-500 mr-1.5" />
-                        <span className="font-medium">{type}</span>
-                      </div>
-                      <div className="text-2xl font-bold">{Math.floor(Math.random() * 25) + 5}</div>
-                      <div className="text-xs text-gray-500">Available units</div>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-4 grid grid-cols-4 gap-3">
-                  {['B+', 'B-', 'AB+', 'AB-'].map(type => (
-                    <div key={type} className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                      <div className="flex items-center mb-1">
-                        <FiDroplet className="text-red-500 mr-1.5" />
-                        <span className="font-medium">{type}</span>
-                      </div>
-                      <div className="text-2xl font-bold">{Math.floor(Math.random() * 25) + 5}</div>
-                      <div className="text-xs text-gray-500">Available units</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            
             
             {/* Deliveries Table/Cards Section - Enhanced for Desktop */}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8 border border-gray-200 lg:transition-all lg:hover:shadow-xl">

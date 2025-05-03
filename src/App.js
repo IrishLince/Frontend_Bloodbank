@@ -35,6 +35,8 @@ import ScheduleBloodbank from './components/RedsourceAdmin/Schedule';
 import RequestSheet from './components/RedsourceAdmin/RequestSheet';
 import AdminProfile from './components/RedsourceAdmin/Profile';
 import UpcomingDeliveries from './components/Hospital/UpcomingDeliveries';
+import Inventory from './components/RedsourceAdmin/Inventory';
+
 import 'react-datepicker/dist/react-datepicker.css';
 
 const TitleUpdater = () => {
@@ -163,6 +165,7 @@ function App() {
                     <Route path="/schedule" element={<ScheduleBloodbank />} />
                     <Route path="/request-sheet" element={<RequestSheet />} />
                     <Route path="/profile-page" element={<AdminProfile />} />
+                    <Route path="/inventory" element={<Inventory />} />
                   </>
                 )}
               </>
