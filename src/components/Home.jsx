@@ -39,7 +39,7 @@ export default function Home() {
             <div className="space-y-4 md:space-y-6">
               <h2 className="text-xl md:text-2xl font-semibold text-gray-800">WHY DONATE BLOOD?</h2>
               <ul className="space-y-2 md:space-y-3 text-sm md:text-base text-gray-700">
-                {['Save lives', 'Quick and simple process', 'Your donation can save 3+ lives', 'Help in emergencies', 'Free health check with every donation'].map((item, index) => (
+                {['Save Lives, Streamlined Process', 'Quick, Easy Blood Donations', 'One Donation, Multiple Lives Saved', 'Emergency Blood Access Made Simple', 'Free Health Check with Donation'].map((item, index) => (
                   <li key={index} className="flex items-center">
                     <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-red-500 mr-2 md:mr-3 flex-shrink-0" />
                     <span>{item}</span>
@@ -59,7 +59,7 @@ export default function Home() {
               className="px-6 py-3 md:px-8 md:py-4 bg-white text-red-600 border-2 border-red-600 rounded-full hover:bg-red-50 transform hover:scale-105 transition-all flex items-center justify-center text-sm md:text-base"
             >
               Learn More
-              <ChevronRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
+              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
              </button>
             </div>
           </div>
@@ -315,4 +315,3 @@ export default function Home() {
     </div>
   )
 }
-

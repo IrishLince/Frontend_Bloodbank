@@ -90,13 +90,13 @@ export default function BloodDonationWebsite() {
             <div>
               <h2 className="text-xl sm:text-2xl font-bold mb-4 text-redsource">Who We Are</h2>
               <p className="text-sm sm:text-base text-graycustom">
-                At <span className="text-redsource font-semibold">RedSource</span>, our passion lies in saving lives through the power of generosity and community. Founded in 2010, we began as a small initiative to address the urgent demand for blood in local hospitals. Over time, we have grown into a trusted organization serving thousands of patients annually. Every drop of blood donated is a testament to the compassion of individuals who choose to make a difference.
+                At <span className="text-redsource font-semibold">RedSource</span>, we are driven by the mission to improve healthcare access through smarter, technology-powered solutions for blood donation management. Launched in 2024, <span className="text-redsource font-semibold">RedSource</span> was created in response to the persistent challenges faced by blood banks and hospitals—shortages, wastage, and delayed access to life-saving blood. We believe that modern healthcare deserves a modern approach, and we aim to bridge the gap between donors, hospitals, and blood banks with a digital platform that is efficient, safe, and easy to use.
               </p>
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold mb-4 text-redsource">Our Mission and Impact</h2>
               <p className="text-sm sm:text-base text-graycustom">
-                At the heart of <span className="text-redsource font-semibold">RedSource</span> is a profound commitment to bridging the gap between those who can give and those who need. Blood donation is more than a medical act; it's a lifeline that connects humanity. Our mission is to ensure a reliable and safe blood supply for hospitals, clinics, and emergency care facilities while fostering awareness about the life-saving importance of blood donation.
+                <span className="text-redsource font-semibold">RedSource</span> is committed to transforming the way blood is donated, tracked, and delivered. Our mission is not only to promote the importance of blood donation but also to build an integrated system that supports real-time inventory monitoring, secure donor scheduling, and fast hospital request fulfillment. By enhancing coordination and minimizing inefficiencies, we help save lives and improve patient outcomes across the healthcare system.
               </p>
             </div>
           </div>
@@ -110,20 +110,20 @@ export default function BloodDonationWebsite() {
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">Join Us In Saving Lives!</h2>
             <p className="text-base sm:text-lg md:text-xl mb-8 sm:mb-12">
-              You have the power to save lives. Whether you're a first-time donor or a seasoned supporter, there's always a way to help.
+            At RedSource, saving lives is a shared mission—and you can be a part of it. Whether you're a first-time donor or a returning supporter, your involvement helps improve access to safe and timely blood supply.
             </p>
             
             <div className="space-y-6 text-left max-w-2xl mx-auto">
-              {['Donate Blood', 'Volunteer Your Time', 'Spread the Word'].map((item) => (
+              {['Donate Through Our Platform:', 'Volunteer Your Time', 'Spread the Word'].map((item) => (
                 <div key={item} className="flex items-start gap-2">
                   <span className="text-red-300 mt-1.5">•</span>
                   <div>
                     <h3 className="font-semibold mb-1">{item}:</h3>
-                    <p className="text-sm sm:text-base">{item === 'Donate Blood' 
-                      ? 'It only takes a few minutes to make a lifetime of difference. We ensure the donation process is comfortable, safe, and rewarding.'
+                    <p className="text-sm sm:text-base">{item === 'Donate Through Our Platform:' 
+                      ? 'Use our easy-to-access system to schedule a donation. Each appointment helps ensure blood is available when and where it’s needed most.'
                       : item === 'Volunteer Your Time'
-                      ? 'Join our team of dedicated volunteers who help with drives, donor support, and community outreach.'
-                      : 'Be an advocate for life. Encourage your friends and family to join the cause and make blood donation a habit.'}
+                      ? 'Support our mission by assisting with donor coordination or engaging in community outreach. Your time and effort help ensure smooth operations and broader awareness.'
+                      : 'Raise awareness by encouraging others to join. Sharing information about blood donation can inspire more people to give and strengthen the community.'}
                     </p>
                   </div>
                 </div>
@@ -139,14 +139,11 @@ export default function BloodDonationWebsite() {
             <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6 sm:gap-8">
               <div className="flex-1 max-w-xl">
                 <h2 className="text-xl sm:text-2xl font-bold text-redsource mb-4">
-                  Why Blood Donation Matters
+                  Why Digital Blood Donation Matters
                 </h2>
                 <div className="space-y-4 text-sm sm:text-base text-graycustom">
                   <p>
-                    Every two seconds, someone needs blood—whether for emergencies, surgeries, or chronic illnesses. Blood cannot be manufactured, making donors like you essential.
-                  </p>
-                  <p>
-                    A single donation can save up to three lives, offering hope and healing to patients and their families. At <span className="text-redsource font-semibold">RedSource</span>, we ensure every donation is safe, simple, and rewarding.
+                  Every moment counts in emergency medical care—and blood donation is often the difference between life and death. However, the traditional blood supply chain often suffers from poor communication and delays. At <span className="text-redsource font-semibold">RedSource</span>, our digital solution empowers donors to contribute consistently, enables blood banks to manage stocks accurately, and ensures hospitals get what they need—when they need it.
                   </p>
                 </div>
               </div>
@@ -161,7 +158,7 @@ export default function BloodDonationWebsite() {
               </div>
             </div>
 
-            {/* Our Commitment to Safety */}
+            {/* Our Commitment to Security and Accessibility */}
             <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6 sm:gap-8">
               <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 order-2 md:order-first">
                 <img
@@ -174,10 +171,10 @@ export default function BloodDonationWebsite() {
               </div>
               <div className="flex-1 max-w-xl order-1 md:order-last">
                 <h2 className="text-xl sm:text-2xl font-bold text-redsource mb-4">
-                  Our Commitment to Safety
+                Our Commitment to Security and Accessibility
                 </h2>
                 <p className="text-sm sm:text-base text-graycustom">
-                  Your safety is our top priority. At <span className="text-red-600 font-semibold">RedSource</span>, we adhere to the highest medical and ethical standards to ensure a safe and comfortable donation process. From sterile equipment to trained professionals, every step of your journey is designed to provide peace of mind.
+                We prioritize the safety of both data and people. Our platform is designed with strong data protection protocols, role-based access, and compliance with healthcare standards to ensure a secure and reliable experience for all users. At <span className="text-redsource font-semibold">RedSource</span>, we are building more than a system—we’re building trust in a digital healthcare future.
                 </p>
               </div>
             </div>
@@ -261,7 +258,7 @@ export default function BloodDonationWebsite() {
       <section className="bg-red-50 py-12 px-4 sm:px-6 text-center">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-xl sm:text-2xl font-bold mb-6 text-red-800">Contact Us!</h2>
-          <p className="mb-8 text-sm sm:text-base">Together, we can create a legacy of kindness and care that transforms lives.</p>
+          <p className="mb-8 text-sm sm:text-base">Together, we can build a smarter, more connected blood donation system that saves lives and strengthens healthcare access for all.</p>
           <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {[
               { icon: Phone, title: 'Phone Number', content: '(555) 123-4567' },
