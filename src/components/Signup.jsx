@@ -10,7 +10,8 @@ import { navigateWithRefresh } from '../utils/navigation';
 export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     contactInformation: '',
@@ -46,7 +47,8 @@ export default function Signup() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Required";
+    if (!formData.firstName.trim()) newErrors.firstName = "Required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Required";
     if (!formData.email.trim()) newErrors.email = "Required";
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email";
     if (!formData.bloodType) newErrors.bloodType = "Required";
@@ -130,19 +132,35 @@ export default function Signup() {
             </div>
 
             <div>
-              <label htmlFor="name" className="block text-gray-700 text-xs font-medium mb-1">
-                Full Name
+              <label htmlFor="firstName" className="block text-gray-700 text-xs font-medium mb-1">
+                First Name
               </label>
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={formData.name}
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleChange}
-                className={`w-full p-2 rounded-lg border ${errors.name ? 'border-red-500' : 'border-gray-300'} text-sm`}
-                placeholder="Full name"
+                className={`w-full p-2 rounded-lg border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} text-sm`}
+                placeholder="First name"
               />
-              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+              {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="lastName" className="block text-gray-700 text-xs font-medium mb-1">
+                Last Name
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className={`w-full p-2 rounded-lg border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} text-sm`}
+                placeholder="Last name"
+              />
+              {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
             </div>
 
             <div>
