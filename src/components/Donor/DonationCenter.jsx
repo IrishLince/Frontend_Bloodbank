@@ -193,7 +193,7 @@ export default function DonationCenter() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                 <Building className="w-4 h-4 mr-1 text-red-500" />
-                Blood Bank Name
+                Donation Center
               </label>
               <div className="relative">
                 <input
@@ -251,7 +251,7 @@ export default function DonationCenter() {
                 <th className="text-left p-4 cursor-pointer" onClick={() => requestSort('name')}>
                   <div className="flex items-center">
                     <Building className="w-4 h-4 mr-2 text-red-500" />
-                    Blood Bank {getSortIcon('name')}
+                    Donation Center {getSortIcon('name')}
                   </div>
                 </th>
                 <th className="text-left p-4 cursor-pointer" onClick={() => requestSort('location')}>

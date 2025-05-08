@@ -1,296 +1,318 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { ArrowLeft, Mail, Phone, MapPin, Shield, Eye, EyeOff, BarChart } from "lucide-react"
+import { ArrowLeft, Mail, Phone, MapPin, Shield, Eye, EyeOff, User, Pencil, Clock } from "lucide-react"
 import Header from "../Header"
 
 const ProfileManagement = () => {
   const [view, setView] = useState("profile")
-  const [activeTab, setActiveTab] = useState("details")
   const [showOldPassword, setShowOldPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [confirmText, setConfirmText] = useState("")
+  const [isMobile, setIsMobile] = useState(false)
   const navigate = useNavigate()
 
+  // Check if the screen is mobile size on load and when resized
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add event listener
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Clean up
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
+
   const renderProfile = () => (
-    <div className="relative">
-      <div className="bg-[#C91C1C] p-8 rounded-b-[4rem] relative">
-        <div className="flex items-center gap-6">
-          <img
-            src="/path-to-admin-avatar.png"
-            alt="Admin User"
-            className="w-24 h-24 rounded-full border-4 border-white object-cover"
-          />
-          <div>
-            <h2 className="text-4xl font-bold text-white">REDSOURCE ADMIN</h2>
-            <div className="flex items-center mt-2">
-              <Shield className="text-white h-4 w-4 mr-1" />
-              <span className="text-white text-sm">Super Administrator</span>
+    <div className="relative bg-gray-50 min-h-screen w-full max-w-full overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 pt-4 sm:pt-6">
+        {/* Hero Banner with Profile Image */}
+        <div className="bg-gradient-to-r from-red-600 to-red-500 rounded-xl shadow-lg overflow-hidden mb-6">
+          <div className="relative p-5 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-8">
+            {/* Profile Image */}
+            <div className="w-28 h-28 sm:w-32 sm:h-32 bg-white rounded-full border-4 border-white flex items-center justify-center relative -mt-4 sm:mt-0">
+              <Shield className="w-14 h-14 sm:w-16 sm:h-16 text-red-600" />
+              <div className="absolute bottom-1 right-1 bg-red-500 w-6 h-6 rounded-full border-2 border-white flex items-center justify-center">
+                <Shield className="w-3 h-3 text-white" />
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-6 px-8">
-        <div className="flex border-b border-gray-200">
-          <button
-            onClick={() => setActiveTab("details")}
-            className={`px-4 py-2 font-medium ${
-              activeTab === "details" ? "text-red-600 border-b-2 border-red-600" : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Admin Details
-          </button>
-          <button
-            onClick={() => setActiveTab("stats")}
-            className={`px-4 py-2 font-medium flex items-center ${
-              activeTab === "stats" ? "text-red-600 border-b-2 border-red-600" : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            <BarChart className="w-4 h-4 mr-2" />
-            System Stats
-          </button>
-        </div>
-      </div>
-
-      {activeTab === "details" ? (
-        <div className="px-8 py-4 flex flex-wrap items-center gap-x-8 gap-y-2">
-          <div className="empty-box"></div>
-          <div className="empty-box"></div>
-          <div className="empty-box"></div>
-          <div className="empty-box"></div>
-          <div className="flex items-center gap-2">
-            <Mail size={16} className="shrink-0 text-[#C91C1C]" />
-            <span className="text-sm">admin@redsource.org</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Phone size={16} className="shrink-0 text-[#C91C1C]" />
-            <span className="text-sm">+63 2 1234 5678</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <MapPin size={16} className="shrink-0 text-[#C91C1C]" />
-            <span className="text-sm">Red Cross Building, Bonifacio Drive, Port Area, Manila</span>
-          </div>
-          <button
-            onClick={() => setView("editDetails")}
-            className="text-sm text-[#C91C1C] hover:text-[#C91C1C]/80 flex items-center gap-1"
-          >
-            Edit Details
-          </button>
-        </div>
-      ) : (
-        <div className="px-8 py-6">
-          <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="font-medium text-lg mb-3">System Overview</h3>
             
-            <div className="grid grid-cols-3 gap-4 mb-4">
-              <div className="bg-gray-50 p-3 rounded-md text-center">
-                <div className="text-2xl font-bold text-[#C91C1C]">128</div>
-                <div className="text-sm text-gray-500">Registered Hospitals</div>
+            {/* Admin Info & Tags */}
+            <div className="text-center sm:text-left flex-1">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight">REDSOURCE ADMIN</h2>
+              <div className="flex flex-wrap justify-center sm:justify-start gap-2 mt-2 sm:mt-3">
+                <span className="bg-white/20 text-white text-xs sm:text-sm px-3 py-1 rounded-full backdrop-blur-sm">
+                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" /> Super Administrator
+                </span>
+                <span className="bg-white/20 text-white text-xs sm:text-sm px-3 py-1 rounded-full backdrop-blur-sm">
+                  <Clock className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" /> Active since 2020
+                </span>
+              </div>
+            </div>
+            
+            {/* Edit Button */}
+            <button
+              onClick={() => setView("editDetails")}
+              className="bg-white/20 hover:bg-white/30 text-white text-sm px-4 py-2 rounded-lg backdrop-blur-sm transition-colors"
+            >
+              <Pencil className="w-4 h-4 sm:w-5 sm:h-5 inline mr-1.5" /> Edit Profile
+            </button>
+          </div>
+        </div>
+        
+        {/* Content Area */}
+        <div className="bg-white rounded-xl shadow-md overflow-hidden p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-bold text-gray-800 flex items-center">
+              <User className="w-5 h-5 mr-2 text-red-600" />
+              Admin Information
+            </h3>
+            <button 
+              onClick={() => setView("editDetails")}
+              className="text-red-600 hover:text-red-700 text-sm font-medium border border-red-600 rounded-lg px-3 py-1 flex items-center"
+            >
+              Edit <ArrowLeft className="w-3 h-3 ml-1 rotate-180" />
+            </button>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <div className="mb-5">
+                <p className="text-sm text-gray-500 uppercase mb-1">Email</p>
+                <div className="flex items-center">
+                  <Mail className="w-4 h-4 mr-2 text-red-600" />
+                  <span className="font-medium">admin@redsource.org</span>
+                </div>
               </div>
               
-              <div className="bg-gray-50 p-3 rounded-md text-center">
-                <div className="text-2xl font-bold text-[#C91C1C]">1,458</div>
-                <div className="text-sm text-gray-500">Active Donors</div>
+              <div className="mb-5">
+                <p className="text-sm text-gray-500 uppercase mb-1">Phone</p>
+                <div className="flex items-center">
+                  <Phone className="w-4 h-4 mr-2 text-red-600" />
+                  <span className="font-medium">+63 2 1234 5678</span>
+                </div>
               </div>
               
-              <div className="bg-gray-50 p-3 rounded-md text-center">
-                <div className="text-2xl font-bold text-[#C91C1C]">356</div>
-                <div className="text-sm text-gray-500">Blood Requests</div>
+              <div className="mb-5">
+                <p className="text-sm text-gray-500 uppercase mb-1">Admin ID</p>
+                <span className="font-medium">ADMIN-001</span>
               </div>
             </div>
             
-            <h4 className="font-medium text-md mb-2">Recent Activity</h4>
-            <div className="space-y-2">
-              <div className="text-sm text-gray-600 flex justify-between">
-                <span>New hospital registered</span>
-                <span>2 hours ago</span>
+            <div>
+              <div className="mb-5">
+                <p className="text-sm text-gray-500 uppercase mb-1">Address</p>
+                <div className="flex items-start">
+                  <MapPin className="w-4 h-4 mr-2 text-red-600 mt-0.5 flex-shrink-0" />
+                  <span className="font-medium">Red Cross Building, Bonifacio Drive, Port Area, Manila</span>
+                </div>
               </div>
-              <div className="text-sm text-gray-600 flex justify-between">
-                <span>System backup completed</span>
-                <span>5 hours ago</span>
+              
+              <div className="mb-5">
+                <p className="text-sm text-gray-500 uppercase mb-1">Role</p>
+                <div className="flex items-center">
+                  <Shield className="w-4 h-4 mr-2 text-red-600" />
+                  <span className="font-medium">Super Administrator</span>
+                </div>
               </div>
-              <div className="text-sm text-gray-600 flex justify-between">
-                <span>Blood request approval</span>
-                <span>Yesterday</span>
+              
+              <div className="mb-5">
+                <p className="text-sm text-gray-500 uppercase mb-1">Status</p>
+                <span className="font-medium text-green-600">Active</span>
               </div>
             </div>
-            
-            <button className="mt-4 text-[#C91C1C] text-sm">View Full Dashboard</button>
           </div>
         </div>
-      )}
-
-      <div className="absolute top-0 right-0 w-1/2 h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 right-24 w-24 h-24 bg-white/10 rounded-full translate-y-1/2" />
-        <div className="absolute top-1/2 right-12 w-16 h-16 bg-white/10 rounded-full" />
       </div>
     </div>
   )
 
   const renderEditDetails = () => (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="max-w-2xl w-full mx-auto bg-white rounded-lg shadow-sm">
+    <div className="min-h-screen bg-gray-50 pt-4 sm:pt-6 pb-8 sm:pb-12 px-4 sm:px-0 overflow-hidden">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         {/* Header */}
-        <div className="bg-[#C91C1C] text-white p-2 flex items-center rounded-t-lg">
-          <button onClick={() => setView("profile")} className="flex items-center">
-            <ArrowLeft className="w-4 h-4 mr-1" />
-            <span>BACK</span>
+        <div className="bg-gradient-to-r from-red-600 to-red-700 text-white p-3 sm:p-4 flex items-center">
+          <button onClick={() => setView("profile")} className="flex items-center hover:bg-red-700/50 rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 transition-colors">
+            <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
+            <span className="font-medium text-sm sm:text-base">Back to Profile</span>
           </button>
-          <h1 className="text-center flex-1 font-medium mr-8">Edit Admin Details</h1>
+          <h1 className="text-center flex-1 font-bold mr-8 sm:mr-12 text-base sm:text-lg">Edit Admin Details</h1>
         </div>
 
         {/* Form */}
-        <form className="p-4">
-          {/* Personal Details Section */}
-          <div className="mb-4">
-            <h2 className="text-base font-medium mb-2">Admin Details</h2>
+        <form className="p-4 sm:p-6 overflow-x-hidden">
+          {/* Admin Details Section */}
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-gray-800 flex items-center">
+              <User className="mr-2 h-4 sm:h-5 w-4 sm:w-5 text-red-600" />
+              Admin Details
+            </h2>
 
-            <div className="space-y-2">
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Full Name</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Full Name</label>
                 <input
                   type="text"
                   defaultValue="RedSource Administrator"
-                  className="w-full p-2 border rounded-md focus:ring-1 focus:ring-[#C91C1C] focus:border-transparent text-sm"
+                  className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-shadow"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Admin ID</label>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Admin ID</label>
                 <input
                   type="text"
                   defaultValue="ADMIN-001"
-                  className="w-full p-2 border rounded-md bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
+                  className="w-full p-2 sm:p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed text-sm"
                   disabled
                 />
+                <p className="text-xs text-gray-500 mt-1">Admin ID cannot be changed</p>
               </div>
 
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Role</label>
-                <input
-                  type="text"
-                  defaultValue="Super Administrator"
-                  className="w-full p-2 border rounded-md bg-gray-100 text-gray-600 cursor-not-allowed text-sm"
-                  disabled
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Contact Number</label>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Contact Number</label>
                 <input
                   type="tel"
                   defaultValue="+63 2 1234 5678"
-                  className="w-full p-2 border rounded-md focus:ring-1 focus:ring-[#C91C1C] focus:border-transparent text-sm"
+                  className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-shadow"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Email Address</label>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Email Address</label>
                 <input
                   type="email"
                   defaultValue="admin@redsource.org"
-                  className="w-full p-2 border rounded-md focus:ring-1 focus:ring-[#C91C1C] focus:border-transparent text-sm"
+                  className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-shadow"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Office Address</label>
+              <div className="space-y-1 md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Office Address</label>
                 <input
                   type="text"
                   defaultValue="Red Cross Building, Bonifacio Drive, Port Area, Manila"
-                  className="w-full p-2 border rounded-md focus:ring-1 focus:ring-[#C91C1C] focus:border-transparent text-sm"
+                  className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-shadow"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Role</label>
+                <input
+                  type="text"
+                  defaultValue="Super Administrator"
+                  className="w-full p-2 sm:p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed text-sm"
+                  disabled
                 />
               </div>
             </div>
           </div>
 
           {/* Password Section */}
-          <div className="mb-4">
-            <h2 className="text-base font-medium mb-2">Password</h2>
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-gray-800 flex items-center">
+              <Shield className="mr-2 h-4 sm:h-5 w-4 sm:w-5 text-red-600" />
+              Change Password
+            </h2>
 
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               <div className="relative">
-                <label className="block text-xs text-gray-600 mb-1">Old password</label>
-                <input
-                  type={showOldPassword ? "text" : "password"}
-                  className="w-full p-2 border rounded-md focus:ring-1 focus:ring-[#C91C1C] focus:border-transparent pr-8 text-sm"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowOldPassword(!showOldPassword)}
-                  className="absolute right-2 top-[22px]"
-                >
-                  {showOldPassword ? (
-                    <EyeOff className="w-4 h-4 text-gray-400" />
-                  ) : (
-                    <Eye className="w-4 h-4 text-gray-400" />
-                  )}
-                </button>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                <div className="relative">
+                  <input
+                    type={showOldPassword ? "text" : "password"}
+                    className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent pr-10 text-sm transition-shadow"
+                    placeholder="Enter your current password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOldPassword(!showOldPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showOldPassword ? (
+                      <EyeOff className="w-4 sm:w-5 h-4 sm:h-5" />
+                    ) : (
+                      <Eye className="w-4 sm:w-5 h-4 sm:h-5" />
+                    )}
+                  </button>
+                </div>
               </div>
 
               <div className="relative">
-                <label className="block text-xs text-gray-600 mb-1">New password</label>
-                <input
-                  type={showNewPassword ? "text" : "password"}
-                  className="w-full p-2 border rounded-md focus:ring-1 focus:ring-[#C91C1C] focus:border-transparent pr-8 text-sm"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-2 top-[22px]"
-                >
-                  {showNewPassword ? (
-                    <EyeOff className="w-4 h-4 text-gray-400" />
-                  ) : (
-                    <Eye className="w-4 h-4 text-gray-400" />
-                  )}
-                </button>
+                <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent pr-10 text-sm transition-shadow"
+                    placeholder="Enter new password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className="w-4 sm:w-5 h-4 sm:h-5" />
+                    ) : (
+                      <Eye className="w-4 sm:w-5 h-4 sm:h-5" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Password must be at least 8 characters long and include a number and special character</p>
               </div>
 
               <div className="relative">
-                <label className="block text-xs text-gray-600 mb-1">Confirm new password</label>
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  className="w-full p-2 border rounded-md focus:ring-1 focus:ring-[#C91C1C] focus:border-transparent pr-8 text-sm"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-2 top-[22px]"
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="w-4 h-4 text-gray-400" />
-                  ) : (
-                    <Eye className="w-4 h-4 text-gray-400" />
-                  )}
-                </button>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent pr-10 text-sm transition-shadow"
+                    placeholder="Confirm new password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 sm:w-5 h-4 sm:h-5" />
+                    ) : (
+                      <Eye className="w-4 sm:w-5 h-4 sm:h-5" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Security Notice */}
-          <div className="mb-4 bg-blue-50 p-3 rounded-md text-sm text-blue-800">
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg text-sm text-blue-800">
             <p>As an administrator, please ensure your password is strong and changed regularly for security purposes.</p>
           </div>
 
-          {/* Buttons */}
-          <div className="flex justify-center space-x-4 mt-2">
+          {/* Action Buttons */}
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 border-t border-gray-200 pt-4 sm:pt-6">
             <button
               type="button"
               onClick={() => setView("profile")}
-              className="px-6 py-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 text-sm"
+              className="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg text-sm transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-1.5 bg-[#C91C1C] text-white rounded-md hover:bg-[#C91C1C]/90 text-sm"
+              className="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium rounded-lg text-sm transition-colors"
             >
-              Save
+              Save Changes
             </button>
           </div>
         </form>
@@ -299,44 +321,57 @@ const ProfileManagement = () => {
   )
 
   const renderArchiveConfirmation = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-hidden">
+      <div className="bg-white rounded-xl max-w-md w-full p-4 sm:p-6 shadow-xl">
         <div className="flex items-center mb-6">
-          <button onClick={() => setView("editDetails")} className="flex items-center text-[#880000]">
-            <ArrowLeft className="mr-2" />
-            <span>BACK</span>
+          <button onClick={() => setView("profile")} className="flex items-center text-red-600 hover:text-red-700">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="font-medium">BACK</span>
           </button>
         </div>
-        <div className="flex flex-col items-center">
-          <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
-            <img src="/path-to-admin-avatar.png" alt="" className="w-full h-full object-cover" />
+        
+        <div className="flex flex-col items-center text-center mb-6">
+          <div className="w-24 h-24 bg-red-100 rounded-full mb-4 flex items-center justify-center">
+            <Shield className="h-12 w-12 text-red-600" />
           </div>
-          <h2 className="text-xl font-bold mb-6">ADMIN ACCOUNT</h2>
-          <div className="mb-6 text-center text-red-600">
-            <p>Admin accounts cannot be deactivated through this interface.</p>
-            <p className="text-sm mt-2">Please contact system support for account changes.</p>
-          </div>
-          <button
-            onClick={() => setView("profile")}
-            className="w-full bg-gray-500 text-white rounded-md py-3 font-medium hover:bg-gray-600"
-          >
-            RETURN TO PROFILE
-          </button>
+          <h3 className="text-xl font-bold text-gray-800">ADMIN ACCOUNT</h3>
+          <p className="text-red-600 mt-4">
+            Admin accounts cannot be deactivated through this interface.
+          </p>
+          <p className="text-sm text-gray-600 mt-2">
+            Please contact system support for account changes.
+          </p>
         </div>
+        
+        <button
+          onClick={() => setView("profile")}
+          className="w-full bg-gray-500 text-white py-3 rounded-lg font-medium hover:bg-gray-600 transition-colors"
+        >
+          RETURN TO PROFILE
+        </button>
       </div>
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="w-full max-w-full overflow-x-hidden">
       <Header />
-      <main className="flex-1 bg-white">
-        {view === "profile" && renderProfile()}
-        {view === "editDetails" && renderEditDetails()}
-        {view === "archiveConfirmation" && renderArchiveConfirmation()}
-      </main>
+      {view === "profile" && renderProfile()}
+      {view === "editDetails" && renderEditDetails()}
+      {view === "archiveConfirmation" && renderArchiveConfirmation()}
     </div>
   )
 }
 
 export default ProfileManagement 
+
+/* Add this CSS class to your global styles */
+/* 
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+*/ 

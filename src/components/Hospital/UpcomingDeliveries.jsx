@@ -10,30 +10,30 @@ export default function UpcomingDeliveries() {
   const deliveriesData = [
     {
       id: '001',
-      donorName: 'Juan Dela Cruz',
+      bloodBankName: 'Central Blood Bank',
       bloodType: 'A+',
       units: '2',
-      donationDate: '2023-11-25',
+      collectionDate: '2023-11-25',
       deliveryDate: '2023-11-27',
       status: 'Scheduled',
       hospitalName: 'Riverside Community Medical Center',
     },
     {
       id: '002',
-      donorName: 'Maria Santos',
+      bloodBankName: 'Regional Blood Center',
       bloodType: 'O-',
       units: '3',
-      donationDate: '2023-11-26',
+      collectionDate: '2023-11-26',
       deliveryDate: '2023-11-28',
       status: 'In Transit',
       hospitalName: 'Central City Hospital',
     },
     {
       id: '003',
-      donorName: 'Pedro Reyes',
+      bloodBankName: 'National Blood Services',
       bloodType: 'B+',
       units: '1',
-      donationDate: '2023-11-27',
+      collectionDate: '2023-11-27',
       deliveryDate: '2023-11-30',
       status: 'Scheduled',
       hospitalName: 'Westside Medical Center',
@@ -44,7 +44,7 @@ export default function UpcomingDeliveries() {
   const [deliveries, setDeliveries] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [filters, setFilters] = useState({
-    donorName: '',
+    bloodBankName: '',
     bloodType: '',
     deliveryDate: '',
     status: '',
@@ -86,9 +86,9 @@ export default function UpcomingDeliveries() {
     // First filter the data
     let filteredData = [...deliveriesData];
     
-    if (filters.donorName) {
+    if (filters.bloodBankName) {
       filteredData = filteredData.filter(item => 
-        item.donorName.toLowerCase().includes(filters.donorName.toLowerCase())
+        item.bloodBankName.toLowerCase().includes(filters.bloodBankName.toLowerCase())
       );
     }
     
@@ -153,18 +153,18 @@ export default function UpcomingDeliveries() {
             <h2 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Filter Deliveries</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <div className="space-y-1 sm:space-y-2">
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Donor Name</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">Blood Bank</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <User className="h-4 w-4 text-gray-400" />
                   </div>
                   <input
                     type="text"
-                    name="donorName"
-                    value={filters.donorName}
+                    name="bloodBankName"
+                    value={filters.bloodBankName}
                     onChange={handleFilterChange}
                     className="border border-gray-300 rounded-lg pl-10 pr-3 py-2 sm:py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 text-sm"
-                    placeholder="Search by donor..."
+                    placeholder="Search by blood bank..."
                   />
                 </div>
               </div>
@@ -277,8 +277,8 @@ export default function UpcomingDeliveries() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th scope="col" className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('donorName')}>
-                      Donor {getSortIcon('donorName')}
+                    <th scope="col" className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('bloodBankName')}>
+                      Blood Bank {getSortIcon('bloodBankName')}
                     </th>
                     <th scope="col" className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('bloodType')}>
                       Blood Type {getSortIcon('bloodType')}
@@ -301,7 +301,7 @@ export default function UpcomingDeliveries() {
                   {filteredAndSortedDeliveries.map((delivery) => (
                     <tr key={delivery.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-3 sm:px-4 py-2.5 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
-                        <div className="font-medium text-gray-900">{delivery.donorName}</div>
+                        <div className="font-medium text-gray-900">{delivery.bloodBankName}</div>
                         <div className="text-gray-500 text-xs truncate max-w-[120px] sm:max-w-[200px]">{delivery.hospitalName}</div>
                       </td>
                       <td className="px-3 sm:px-4 py-2.5 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
@@ -314,7 +314,7 @@ export default function UpcomingDeliveries() {
                       </td>
                       <td className="px-3 sm:px-4 py-2.5 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                         <div className="text-gray-700">{new Date(delivery.deliveryDate).toLocaleDateString()}</div>
-                        <div className="text-gray-500 text-xs">Donated: {new Date(delivery.donationDate).toLocaleDateString()}</div>
+                        <div className="text-gray-500 text-xs">Collected: {new Date(delivery.collectionDate).toLocaleDateString()}</div>
                       </td>
                       <td className="px-3 sm:px-4 py-2.5 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                         <span className={`inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-medium ${
@@ -350,7 +350,7 @@ export default function UpcomingDeliveries() {
                   <p className="text-gray-500 text-sm">No deliveries found matching your filters.</p>
                   <button 
                     className="mt-2 text-red-600 hover:text-red-800 text-sm font-medium"
-                    onClick={() => setFilters({ donorName: '', bloodType: '', deliveryDate: '', status: '' })}
+                    onClick={() => setFilters({ bloodBankName: '', bloodType: '', deliveryDate: '', status: '' })}
                   >
                     Reset filters
                   </button>

@@ -24,9 +24,12 @@ import {
   FiLayers,
   FiMinus,
   FiCornerUpRight,
-  FiActivity
+  FiActivity,
+  FiUser,
+  FiArrowRight
 } from 'react-icons/fi';
 import { Calendar } from 'lucide-react';
+import BloodBagRequests from './BloodBagRequests';
 
 const Inventory = () => {
   const [view, setView] = useState('inventory');
@@ -42,7 +45,7 @@ const Inventory = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAdvancedFilterModal, setShowAdvancedFilterModal] = useState(false);
-  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [showRequestsView, setShowRequestsView] = useState(false);
   const [currentDetailItem, setCurrentDetailItem] = useState(null);
   const [isSelectMode, setIsSelectMode] = useState(false);
   const [advancedFilters, setAdvancedFilters] = useState({
@@ -90,6 +93,15 @@ const Inventory = () => {
     'University Medical Center',
     'Children\'s Hospital',
     'Regional Medical Center'
+  ];
+  
+  // Mock data for claiming donors (add this near the hospitals array)
+  const claimingDonors = [
+    { id: 'D-1001', name: 'John Smith', points: 250, date: '2023-09-15' },
+    { id: 'D-1002', name: 'Maria Garcia', points: 300, date: '2023-09-14' },
+    { id: 'D-1003', name: 'David Lee', points: 220, date: '2023-09-13' },
+    { id: 'D-1004', name: 'Sarah Johnson', points: 280, date: '2023-09-10' },
+    { id: 'D-1005', name: 'Michael Brown', points: 190, date: '2023-09-08' }
   ];
   
   // Mock data for blood inventory
@@ -322,9 +334,6 @@ const Inventory = () => {
       case 'delete':
         setShowDeleteModal(true);
         break;
-      case 'transfer':
-        setShowTransferModal(true);
-        break;
       default:
         break;
     }
@@ -414,21 +423,6 @@ const Inventory = () => {
     // Here you would typically make an API call to delete the data
   };
 
-  // Handle transfer blood units
-  const handleTransferBloodUnits = (hospital) => {
-    const updatedInventory = bloodInventory.map(item => 
-      selectedItems.includes(item.id) 
-      ? { ...item, status: 'Reserved', hospital } 
-      : item
-    );
-    setBloodInventory(updatedInventory);
-    setShowTransferModal(false);
-    setSelectedItems([]);
-    setIsSelectMode(false);
-    
-    // Here you would typically make an API call to update the data
-  };
-
   // Handle view details
   const handleViewDetails = (item) => {
     setCurrentDetailItem(item);
@@ -445,6 +439,164 @@ const Inventory = () => {
     document.body.innerHTML = originalBody;
     
     // Reload the component after printing
+    window.location.reload();
+  };
+
+  // Handle print donor claim voucher
+  const handlePrintVoucher = (donorId, selectedUnits) => {
+    // Get donor information
+    const donor = claimingDonors.find(d => d.id === donorId);
+    if (!donor) return;
+    
+    // Generate request ID and timestamp
+    const requestId = `REQ-${Math.floor(1000 + Math.random() * 9000)}`;
+    const requestDate = new Date().toLocaleDateString();
+    
+    // Create voucher content
+    const voucherHtml = `
+      <div style="font-family: 'Arial', sans-serif; max-width: 800px; margin: 0 auto; padding: 30px; border: 2px solid #e11d48; border-radius: 10px; position: relative;">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e11d48; padding-bottom: 20px;">
+          <div>
+            <h1 style="margin: 0; color: #e11d48; font-size: 28px;">RedSource Blood Bank</h1>
+            <p style="margin: 5px 0 0; color: #666;">Blood Donation Claim Voucher</p>
+          </div>
+          <div style="text-align: right;">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #e11d48; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">
+              <span>R+</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Watermark -->
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 100px; opacity: 0.05; color: #e11d48; font-weight: bold; pointer-events: none; white-space: nowrap;">
+          RedSource
+        </div>
+        
+        <!-- Request Info -->
+        <div style="margin-bottom: 20px; background-color: #f9f9f9; border-left: 4px solid #e11d48; padding: 15px;">
+          <div style="display: flex; justify-content: space-between;">
+            <div>
+              <h3 style="margin: 0 0 5px; font-size: 16px; color: #333;">Blood Bag Request</h3>
+              <p style="margin: 0; font-size: 14px;"><strong>Request ID:</strong> ${requestId}</p>
+            </div>
+            <div style="text-align: right;">
+              <span style="display: inline-block; padding: 5px 10px; background-color: #FEF9C3; border-radius: 15px; color: #854D0E; font-size: 12px; font-weight: bold;">Accepted</span>
+              <p style="margin: 5px 0 0; font-size: 14px;"><strong>Date:</strong> ${requestDate}</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Donor Information -->
+        <div style="margin-bottom: 30px;">
+          <h2 style="font-size: 18px; margin-bottom: 15px; color: #333;">Donor Information</h2>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #eee; width: 40%;"><strong>Donor ID:</strong></td>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">${donor.id}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Donor Name:</strong></td>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">${donor.name}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Donor Points:</strong></td>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">${donor.points} points</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Claim Date:</strong></td>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">${requestDate}</td>
+            </tr>
+          </table>
+        </div>
+        
+        <!-- Blood Units Info -->
+        <div style="margin-bottom: 30px;">
+          <h2 style="font-size: 18px; margin-bottom: 15px; color: #333;">Blood Units Claimed</h2>
+          <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+            <thead>
+              <tr style="background-color: #f9f9f9;">
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Unit ID</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Blood Type</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Units</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Expiry Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${selectedUnits.map(id => {
+                const unit = bloodInventory.find(item => item.id === id);
+                return unit ? `
+                  <tr>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">${unit.id}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; color: #e11d48;">${unit.type}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">${unit.units}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">${unit.expiry}</td>
+                  </tr>
+                ` : '';
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Validation Section -->
+        <div style="margin-bottom: 30px; border: 1px dashed #ccc; padding: 15px; background-color: #f9f9f9;">
+          <h2 style="font-size: 18px; margin-bottom: 15px; color: #333;">Voucher Validation</h2>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="margin: 0 0 5px; font-size: 14px;">To validate this voucher, scan the QR code or visit:</p>
+              <p style="margin: 0; font-size: 14px; font-weight: bold;">www.redsource.org/validate</p>
+              <p style="margin: 5px 0 0; font-size: 14px;">Enter validation code: <strong style="font-family: monospace;">${requestId}-${donor.id}</strong></p>
+            </div>
+            <div style="width: 100px; height: 100px; background-color: #fff; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center;">
+              <div style="font-size: 10px; text-align: center;">QR Code<br>Placeholder</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Terms & Signature -->
+        <div style="display: flex; margin-top: 40px;">
+          <div style="flex: 1;">
+            <h3 style="font-size: 16px; margin-bottom: 10px; color: #333;">Terms & Conditions</h3>
+            <ul style="margin: 0; padding-left: 20px; color: #666; font-size: 12px;">
+              <li>This voucher is valid for 30 days from the claim date.</li>
+              <li>Blood units must be used for medical purposes only.</li>
+              <li>RedSource is not responsible for improper handling after claim.</li>
+              <li>For inquiries, contact our support at support@redsource.org</li>
+            </ul>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <div style="margin-top: 60px; border-top: 1px solid #333; display: inline-block; padding-top: 5px; width: 200px;">
+              <p style="margin: 0; font-size: 12px; color: #666;">Authorized Signature</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; font-size: 12px; color: #666;">
+          <p style="margin: 0;">RedSource Blood Bank | 123 Medical Center Rd | City, State 12345</p>
+          <p style="margin: 5px 0 0;">Phone: (123) 456-7890 | Email: info@redsource.org | www.redsource.org</p>
+          <p style="margin: 15px 0 0; font-size: 10px;">Voucher ID: ${requestId}-${Date.now().toString(36).toUpperCase()}</p>
+        </div>
+      </div>
+    `;
+    
+    // Print the voucher
+    const originalBody = document.body.innerHTML;
+    document.body.innerHTML = voucherHtml;
+    
+    // Add print styles
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @media print {
+        body { margin: 0; padding: 0; }
+        @page { size: A4; margin: 0.5cm; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Print and restore
+    window.print();
+    document.body.innerHTML = originalBody;
     window.location.reload();
   };
 
@@ -972,52 +1124,6 @@ const Inventory = () => {
     </div>
   );
 
-  const renderTransferModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-        <div className="flex items-center justify-between bg-gray-100 px-6 py-3 rounded-t-lg">
-          <h3 className="text-lg font-medium">Transfer Blood Units</h3>
-          <button 
-            onClick={() => setShowTransferModal(false)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <FiX size={20} />
-          </button>
-        </div>
-        
-        <div className="p-6">
-          <p className="text-gray-700 mb-4">
-            Select a hospital to transfer {selectedItems.length} blood unit(s) to:
-          </p>
-          
-          <div className="space-y-2 mb-4">
-            {hospitals.map(hospital => (
-              <div 
-                key={hospital}
-                className="p-3 border rounded hover:bg-gray-50 cursor-pointer"
-                onClick={() => handleTransferBloodUnits(hospital)}
-              >
-                <div className="flex items-center">
-                  <FiCornerUpRight className="text-red-600 mr-2" />
-                  <span>{hospital}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={() => setShowTransferModal(false)}
-              className="px-4 py-2 border rounded text-gray-700"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   const renderAdvancedFilterModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl">
@@ -1149,6 +1255,12 @@ const Inventory = () => {
       </div>
     </div>
   );
+
+  // Handle showing blood bag requests view
+  const handleShowBloodBagRequests = () => {
+    setShowRequestsView(true);
+    setView('requests');
+  };
 
   // Detail view component
   const renderDetailView = () => {
@@ -1326,13 +1438,10 @@ const Inventory = () => {
                   
                   {currentDetailItem.status !== 'Reserved' && (
                     <button 
-                      onClick={() => {
-                        setSelectedItems([currentDetailItem.id]);
-                        setShowTransferModal(true);
-                      }}
+                      onClick={handleShowBloodBagRequests}
                       className="w-full py-2 bg-green-600 text-white rounded-md flex items-center justify-center"
                     >
-                      <FiCornerUpRight className="mr-2" /> Transfer to Hospital
+                      <FiCornerUpRight className="mr-2" /> Process Donor Claim
                     </button>
                   )}
                   
@@ -1351,37 +1460,7 @@ const Inventory = () => {
           </div>
         </div>
         
-        <div className="mt-6 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Unit Activity Timeline</h2>
-          
-          <div className="space-y-4">
-            <div className="relative pl-8 pb-4 border-l-2 border-green-600">
-              <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-green-600"></div>
-              <p className="text-sm font-medium">Unit Collected</p>
-              <p className="text-xs text-gray-500">{currentDetailItem.collected}</p>
-            </div>
-            
-            <div className="relative pl-8 pb-4 border-l-2 border-blue-600">
-              <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-blue-600"></div>
-              <p className="text-sm font-medium">Screening {currentDetailItem.screeningStatus}</p>
-              <p className="text-xs text-gray-500">{currentDetailItem.collected}</p>
-            </div>
-            
-            {currentDetailItem.status === 'Reserved' && (
-              <div className="relative pl-8 pb-4 border-l-2 border-purple-600">
-                <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-purple-600"></div>
-                <p className="text-sm font-medium">Reserved for {currentDetailItem.hospital}</p>
-                <p className="text-xs text-gray-500">Yesterday</p>
-              </div>
-            )}
-            
-            <div className="relative pl-8 pb-4 border-l-2 border-red-600">
-              <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-red-600"></div>
-              <p className="text-sm font-medium">Expiry Date</p>
-              <p className="text-xs text-gray-500">{currentDetailItem.expiry}</p>
-            </div>
-          </div>
-        </div>
+        
       </div>
     );
   };
@@ -1403,9 +1482,17 @@ const Inventory = () => {
     
     return (
       <div className="container mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Blood Inventory Management</h1>
-          <p className="text-gray-600">Track, manage, and monitor blood supplies</p>
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">Blood Inventory Management</h1>
+            <p className="text-gray-600">Track, manage, and monitor blood supplies</p>
+          </div>
+          <button 
+            onClick={() => setShowValidationModal(true)}
+            className="mt-2 sm:mt-0 flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <FiCheck className="mr-2" /> Validate Donor Voucher
+          </button>
         </div>
 
         {/* Summary cards */}
@@ -1542,13 +1629,6 @@ const Inventory = () => {
                 <span className="text-sm font-medium">{selectedItems.length} items selected</span>
               </div>
               <div className="flex gap-2">
-                <button 
-                  onClick={() => handleBatchAction('transfer')}
-                  className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm flex items-center"
-                >
-                  <FiCornerUpRight className="mr-1" />
-                  Transfer
-                </button>
                 <button 
                   onClick={() => handleBatchAction('delete')}
                   className="bg-red-600 text-white px-3 py-1 rounded-md text-sm flex items-center"
@@ -1818,17 +1898,238 @@ const Inventory = () => {
     );
   };
 
+  // State for validation modal
+  const [showValidationModal, setShowValidationModal] = useState(false);
+  const [validationCode, setValidationCode] = useState('');
+  const [validationResult, setValidationResult] = useState(null);
+  
+  // ... existing code ...
+  
+  // Handle voucher validation
+  const handleValidateVoucher = () => {
+    // Validate the voucher code
+    if (!validationCode.trim()) {
+      setValidationResult({
+        status: 'error',
+        message: 'Please enter a validation code'
+      });
+      return;
+    }
+    
+    // Parse the validation code (format: REQ-XXXX-D-XXXX)
+    const parts = validationCode.split('-');
+    if (parts.length < 3) {
+      setValidationResult({
+        status: 'error',
+        message: 'Invalid voucher format. Expected format: REQ-XXXX-D-XXXX'
+      });
+      return;
+    }
+    
+    // Simulate validation success (in a real app, this would check against a database)
+    setValidationResult({
+      status: 'success',
+      message: 'Voucher validated successfully!',
+      details: {
+        requestId: `${parts[0]}-${parts[1]}`,
+        donorId: `${parts[2]}-${parts[3]}`,
+        validatedOn: new Date().toLocaleString()
+      }
+    });
+  };
+  
+  // Reset validation
+  const resetValidation = () => {
+    setValidationCode('');
+    setValidationResult(null);
+  };
+  
+  // Validation modal
+  const renderValidationModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between bg-gray-100 px-6 py-3 rounded-t-lg">
+          <h3 className="text-lg font-medium">Validate Donor Voucher</h3>
+          <button 
+            onClick={() => {
+              setShowValidationModal(false);
+              resetValidation();
+            }}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <FiX size={20} />
+          </button>
+        </div>
+        
+        <div className="p-6">
+          {!validationResult ? (
+            <>
+              <p className="text-gray-700 mb-4">
+                Enter the validation code from the donor's voucher to verify its authenticity.
+              </p>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Validation Code</label>
+                <input
+                  type="text"
+                  value={validationCode}
+                  onChange={(e) => setValidationCode(e.target.value)}
+                  placeholder="e.g. REQ-1234-D-5678"
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => {
+                    setShowValidationModal(false);
+                    resetValidation();
+                  }}
+                  className="px-4 py-2 border rounded text-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleValidateVoucher}
+                  className="px-4 py-2 bg-green-600 text-white rounded flex items-center"
+                >
+                  <FiCheck className="mr-1" /> Validate
+                </button>
+              </div>
+            </>
+          ) : (
+            <div>
+              {validationResult.status === 'success' ? (
+                <div className="text-center">
+                  <div className="flex items-center justify-center mb-4 text-green-600">
+                    <div className="bg-green-100 p-3 rounded-full">
+                      <FiCheck size={30} />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-green-600 mb-2">Voucher Validated!</h3>
+                  <p className="text-gray-600 mb-4">{validationResult.message}</p>
+                  
+                  <div className="bg-gray-50 p-4 rounded-lg text-left mb-4">
+                    <p className="text-sm text-gray-700"><strong>Request ID:</strong> {validationResult.details.requestId}</p>
+                    <p className="text-sm text-gray-700"><strong>Donor ID:</strong> {validationResult.details.donorId}</p>
+                    <p className="text-sm text-gray-700"><strong>Validated On:</strong> {validationResult.details.validatedOn}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <div className="flex items-center justify-center mb-4 text-red-600">
+                    <div className="bg-red-100 p-3 rounded-full">
+                      <FiX size={30} />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-red-600 mb-2">Validation Failed</h3>
+                  <p className="text-gray-600 mb-4">{validationResult.message}</p>
+                </div>
+              )}
+              
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={() => {
+                    resetValidation();
+                  }}
+                  className="px-4 py-2 border rounded text-gray-700 mr-2"
+                >
+                  Try Again
+                </button>
+                <button
+                  onClick={() => {
+                    setShowValidationModal(false);
+                    resetValidation();
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Format date helper function
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+  
+  // Get status color for blood requests
+  const getRequestStatusColor = (status) => {
+    switch(status) {
+      case 'Pending': return 'bg-yellow-100 text-yellow-800';
+      case 'Accepted': return 'bg-blue-100 text-blue-800';
+      case 'Complete': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+  
+  // Mock data for blood bag requests
+  const [pendingRequests, setPendingRequests] = useState([
+    {
+      id: 'REQ-001',
+      donorName: 'Irish Lince',
+      donorId: 'D-4578',
+      bloodType: 'O+',
+      units: 1,
+      requestDate: '2024-04-18',
+      status: 'Pending'
+    },
+    {
+      id: 'REQ-002',
+      donorName: 'Jane Smith',
+      donorId: 'D-3692',
+      bloodType: 'A-',
+      units: 2,
+      requestDate: '2024-04-17',
+      status: 'Pending'
+    },
+    {
+      id: 'REQ-003',
+      donorName: 'Mark Johnson',
+      donorId: 'D-5123',
+      bloodType: 'AB+',
+      units: 1,
+      requestDate: '2024-04-15',
+      status: 'Accepted'
+    },
+    {
+      id: 'REQ-004',
+      donorName: 'Sarah Williams',
+      donorId: 'D-4211',
+      bloodType: 'B+',
+      units: 1,
+      requestDate: '2024-04-10',
+      status: 'Complete'
+    }
+  ]);
+
   return (
     <div>
       {view === 'inventory' && renderInventoryOverview()}
       {view === 'details' && renderDetailView()}
+      {view === 'requests' && (
+        <BloodBagRequests
+          pendingRequests={pendingRequests}
+          setPendingRequests={setPendingRequests}
+          setView={setView}
+          setShowValidationModal={setShowValidationModal}
+          formatDate={formatDate}
+          getRequestStatusColor={getRequestStatusColor}
+        />
+      )}
       
       {/* Modals */}
       {showAddModal && renderAddModal()}
       {showEditModal && renderEditModal()}
       {showDeleteModal && renderDeleteModal()}
-      {showTransferModal && renderTransferModal()}
       {showAdvancedFilterModal && renderAdvancedFilterModal()}
+      {showValidationModal && renderValidationModal()}
     </div>
   );
 };

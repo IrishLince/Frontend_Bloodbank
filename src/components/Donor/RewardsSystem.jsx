@@ -2,13 +2,23 @@
 
 import { useState } from "react"
 import { Gift, Award, Clock, ChevronRight, Check, AlertCircle, X, Download, TrendingUp } from "lucide-react"
+import { FiX, FiCornerUpRight, FiGift, FiCheckCircle, FiClock, FiDownload, FiPackage, FiPrinter } from "react-icons/fi"
+import { toast } from "react-toastify"
 
 const RewardsSystem = () => {
   const [activeTab, setActiveTab] = useState("available")
   const [showRedeemModal, setShowRedeemModal] = useState(false)
   const [selectedReward, setSelectedReward] = useState(null)
   const [redeemSuccess, setRedeemSuccess] = useState(false)
+  const [showVoucherModal, setShowVoucherModal] = useState(false)
+  const [selectedVoucherAmount, setSelectedVoucherAmount] = useState(1)
+  const [selectedBloodType, setSelectedBloodType] = useState("A+")
+  const [showBloodBagRequestsTab, setShowBloodBagRequestsTab] = useState(false)
 
+  // Donor information
+  const donorName = "Irish Lince"
+  const donorId = "D-4578"
+  
   // Mock data - in a real app, this would come from an API
   const userPoints = 350
   const pointsHistory = [
@@ -16,6 +26,41 @@ const RewardsSystem = () => {
     { id: 2, event: "Blood Donation", points: 100, date: "Feb 20, 2024" },
     { id: 3, event: "Referral Bonus", points: 50, date: "Feb 10, 2024" },
     { id: 4, event: "Blood Donation", points: 100, date: "Dec 05, 2023" },
+  ]
+
+  // Mock blood bag requests data
+  const bloodBagRequests = [
+    { 
+      id: "REQ-001", 
+      status: "Pending", 
+      requestDate: "Apr 18, 2024", 
+      units: 1, 
+      pointsUsed: 100,
+      bloodBank: null,
+      bloodType: "A+"
+    },
+    { 
+      id: "REQ-002", 
+      status: "Accepted", 
+      requestDate: "Apr 10, 2024", 
+      units: 2, 
+      pointsUsed: 200,
+      bloodBank: "City Blood Bank",
+      acceptedDate: "Apr 11, 2024",
+      expiryDate: "Apr 25, 2024",
+      bloodType: "A+"
+    },
+    { 
+      id: "REQ-003", 
+      status: "Complete", 
+      requestDate: "Mar 25, 2024", 
+      units: 1, 
+      pointsUsed: 100,
+      bloodBank: "Regional Medical Center",
+      acceptedDate: "Mar 26, 2024",
+      completedDate: "Mar 30, 2024",
+      bloodType: "O-"
+    }
   ]
 
   const availableRewards = [
@@ -47,6 +92,13 @@ const RewardsSystem = () => {
       pointsCost: 100,
       image: "certificate",
     },
+    {
+      id: 5,
+      title: "Blood Bag Voucher",
+      description: "Convert your points to donate a blood bag to hospitals in need",
+      pointsCost: 100,
+      image: "blood-bag",
+    }
   ]
 
   const redeemedRewards = [
@@ -58,9 +110,17 @@ const RewardsSystem = () => {
     },
   ]
 
+  // Blood type options
+  const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+
   const handleRedeemClick = (reward) => {
-    setSelectedReward(reward)
-    setShowRedeemModal(true)
+    if (reward.title === "Blood Bag Voucher") {
+      setSelectedReward(reward)
+      setShowVoucherModal(true)
+    } else {
+      setSelectedReward(reward)
+      setShowRedeemModal(true)
+    }
   }
 
   const handleConfirmRedeem = () => {
@@ -82,10 +142,666 @@ const RewardsSystem = () => {
         return <Clock className="w-8 h-8 text-red-600" />
       case "certificate":
         return <Award className="w-8 h-8 text-red-600" />
+      case "blood-bag":
+        return <FiPackage className="w-8 h-8 text-red-600" />
       default:
         return <Gift className="w-8 h-8 text-red-600" />
     }
   }
+
+  const handleCreateBloodBagRequest = () => {
+    // In a real app, this would make an API call to create a blood bag request
+    toast.success(`Blood bag voucher request created successfully for ${selectedBloodType} blood type. Your request is now pending.`);
+    setShowVoucherModal(false);
+    setShowBloodBagRequestsTab(true);
+    setActiveTab("bloodBagRequests");
+  }
+
+  const handlePrintVoucher = (request) => {
+    // Create the voucher content as a new window
+    const voucherWindow = window.open('', '_blank', 'width=800,height=600');
+    
+    // Generate a validation code (in a real app, this would be stored in the database)
+    const validationCode = `${request.id}-${Math.floor(100000 + Math.random() * 900000)}`;
+    
+    // Get current date for the voucher issue date
+    const issueDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric'
+    });
+
+    // Format the expiry date
+    const expiryDate = new Date(request.expiryDate).toLocaleDateString('en-US', {
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric'
+    });
+    
+    // Write the voucher HTML
+    voucherWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Blood Bag Voucher - ${request.id}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          @media print {
+            @page {
+              size: A4;
+              margin: 0;
+            }
+            body {
+              margin: 1.5cm;
+            }
+            .no-print {
+              display: none;
+            }
+          }
+          
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+          }
+          
+          .voucher-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+          }
+          
+          .color-bar {
+            height: 8px;
+            background: #C91C1C;
+            width: 100%;
+          }
+          
+          .container {
+            padding: 30px;
+            position: relative;
+          }
+          
+          .header {
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+          }
+          
+          .brand-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #C91C1C;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+          }
+          
+          .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #222;
+          }
+          
+          .voucher-id {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            display: inline-block;
+          }
+          
+          .section {
+            margin-bottom: 25px;
+            background-color: #fff;
+            border-radius: 6px;
+            padding: 20px;
+            border: 1px solid #eee;
+          }
+          
+          .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 15px;
+          }
+          
+          .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+          }
+          
+          .info-item {
+            margin-bottom: 12px;
+          }
+          
+          .info-label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 4px;
+            font-size: 14px;
+          }
+          
+          .info-value {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+          }
+
+          .blood-type-section {
+            background-color: #FFF5F5;
+            border-left: 4px solid #C91C1C;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+          }
+
+          .blood-type-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #C91C1C;
+            margin: 10px 0;
+          }
+          
+          .validation-section {
+            background-color: #f7f7f7;
+            border: 2px dashed #ccc;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            margin: 25px 0;
+          }
+          
+          .validation-label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+          }
+          
+          .validation-code {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            letter-spacing: 3px;
+            font-weight: bold;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            display: inline-block;
+          }
+          
+          .validation-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+          }
+          
+          .validation-text {
+            flex: 1;
+            text-align: left;
+            padding-right: 20px;
+          }
+          
+          .validation-note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+            text-align: left;
+          }
+          
+          .qr-code {
+            background-color: white;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+          }
+          
+          .notice {
+            background-color: #FFF5F5;
+            border-left: 4px solid #C91C1C;
+            padding: 15px;
+            margin: 25px 0;
+            border-radius: 6px;
+          }
+          
+          .notice-title {
+            font-weight: bold;
+            color: #C91C1C;
+            margin-bottom: 8px;
+          }
+          
+          .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+          }
+          
+          .stamp {
+            border: 2px dashed #C91C1C;
+            color: #C91C1C;
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            transform: rotate(-5deg);
+            position: absolute;
+            right: 40px;
+            top: 80px;
+            background-color: rgba(255, 245, 245, 0.8);
+          }
+          
+          .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+          }
+          
+          .signature-box {
+            width: 45%;
+          }
+          
+          .signature-line {
+            border-top: 1px solid #ddd;
+            margin-top: 40px;
+            margin-bottom: 10px;
+          }
+          
+          .signature-name {
+            font-size: 14px;
+            text-align: center;
+            color: #555;
+          }
+          
+          .print-button {
+            background-color: #C91C1C;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            transition: background-color 0.2s;
+          }
+          
+          .print-button:hover {
+            background-color: #A91515;
+          }
+          
+          .print-button svg {
+            margin-right: 8px;
+          }
+
+          .print-instructions {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+          }
+          
+        </style>
+      </head>
+      <body>
+        <div class="voucher-container">
+          <div class="color-bar"></div>
+          <div class="container">
+            <div class="header">
+              <div class="brand-name">RedSource</div>
+              <h1 class="title">Blood Bag Voucher</h1>
+              <div class="voucher-id">Voucher ID: ${request.id}</div>
+            </div>
+            
+            <div class="stamp">AUTHORIZED</div>
+            
+            <div class="section">
+              <h3 class="section-title">Donor Information</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Donor Name</div>
+                  <div class="info-value">${donorName}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Donor ID</div>
+                  <div class="info-value">${donorId}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="blood-type-section">
+              <div class="info-label">Blood Type to Claim</div>
+              <div class="blood-type-value">${request.bloodType || selectedBloodType}</div>
+            </div>
+            
+            <div class="section">
+              <h3 class="section-title">Voucher Details</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Blood Bag Units</div>
+                  <div class="info-value">${request.units}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Points Used</div>
+                  <div class="info-value">${request.pointsUsed} points</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Request Date</div>
+                  <div class="info-value">${request.requestDate}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Acceptance Date</div>
+                  <div class="info-value">${request.acceptedDate}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Issue Date</div>
+                  <div class="info-value">${issueDate}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Valid Until</div>
+                  <div class="info-value">${expiryDate}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="section">
+              <h3 class="section-title">Blood Bank Information</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Blood Bank Name</div>
+                  <div class="info-value">${request.bloodBank}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Location</div>
+                  <div class="info-value">Main Branch</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Contact</div>
+                  <div class="info-value">(02) 8123-4567</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Hours</div>
+                  <div class="info-value">Monday - Saturday, 8:00 AM - 5:00 PM</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="validation-section">
+              <div class="validation-label">Validation Code</div>
+              <div class="validation-container">
+                <div class="validation-text">
+                  <div class="validation-code">${validationCode}</div>
+                  <div class="validation-note">Present this code when claiming your blood bags. This code confirms your voucher's authenticity.</div>
+                </div>
+                <div class="qr-code">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(validationCode)}" alt="QR Code for validation" width="120" height="120" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="notice">
+              <div class="notice-title">Important Notice</div>
+              <p>This voucher entitles the donor to claim blood bag units as specified.
+              Present this voucher along with a valid ID at the blood bank mentioned above.
+              This voucher is valid until the expiry date shown and is non-transferable.</p>
+            </div>
+            
+            <div class="signature-section">
+              <div class="signature-box">
+                <div class="signature-line"></div>
+                <div class="signature-name">Authorized Signature</div>
+              </div>
+              <div class="signature-box">
+                <div class="signature-line"></div>
+                <div class="signature-name">Donor Signature</div>
+              </div>
+            </div>
+            
+            <div class="footer">
+              <p>RedSource Blood Bank Management System</p>
+              <p>For verification, please contact: verification@redsource.com</p>
+              <p>This document is void if tampered or modified</p>
+            </div>
+          </div>
+          <div class="color-bar"></div>
+        </div>
+
+        <div class="print-instructions no-print">
+          Press the button below to print your voucher.<br>
+          For best results, use landscape orientation.
+        </div>
+        
+        <button class="print-button no-print" onclick="window.print();return false;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          Print Voucher
+        </button>
+      </body>
+      </html>
+    `);
+    
+    voucherWindow.document.close();
+    
+    toast.success(`Voucher generated for ${request.id}. Please print it and present at ${request.bloodBank}.`);
+  };
+
+  const renderVoucherConversionModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between bg-gray-100 px-6 py-3 rounded-t-lg">
+          <h3 className="text-lg font-medium">Convert Points to Blood Bag Voucher</h3>
+          <button 
+            onClick={() => setShowVoucherModal(false)}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <FiX size={20} />
+          </button>
+        </div>
+        
+        <div className="p-6">
+          <div className="flex flex-col items-center justify-center mb-6">
+            <FiPackage className="text-red-600 w-16 h-16 mb-3" />
+            <p className="text-center text-gray-700 mb-2">
+              You are about to convert <span className="font-bold text-red-600">100 points</span> into a blood bag voucher
+            </p>
+            <p className="text-sm text-gray-500 text-center">
+              Once created, your request will be visible to blood banks and can be claimed when approved.
+            </p>
+          </div>
+          
+          <div className="bg-gray-50 p-4 rounded-lg mb-4">
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-600">Donor Name:</span>
+              <span className="font-medium">{donorName}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-600">Donor ID:</span>
+              <span className="font-medium">{donorId}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-600">Points Cost:</span>
+              <span className="font-medium">100 points</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-600">Blood Bag Units:</span>
+              <span className="font-medium">1 unit</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Blood Type:</span>
+              <select
+                value={selectedBloodType}
+                onChange={(e) => setSelectedBloodType(e.target.value)}
+                className="font-medium border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                {bloodTypes.map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
+          <div className="flex justify-end space-x-3">
+            <button
+              onClick={() => setShowVoucherModal(false)}
+              className="px-4 py-2 border rounded text-gray-700"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleCreateBloodBagRequest}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Create Request
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderBloodBagRequests = () => (
+    <div className="space-y-4">
+      {bloodBagRequests.length > 0 ? (
+        bloodBagRequests.map((request) => (
+          <div key={request.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center">
+                <div className={`p-3 rounded-xl mr-4 ${
+                  request.status === 'Pending' ? 'bg-yellow-50' : 
+                  request.status === 'Accepted' ? 'bg-blue-50' : 'bg-green-50'
+                }`}>
+                  {request.status === 'Pending' ? 
+                    <FiClock className={`w-6 h-6 text-yellow-600`} /> : 
+                    request.status === 'Accepted' ? 
+                    <FiCheckCircle className={`w-6 h-6 text-blue-600`} /> :
+                    <FiCheckCircle className={`w-6 h-6 text-green-600`} />
+                  }
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-800 text-lg">{request.id}</h3>
+                  <p className="text-sm text-gray-600">Requested on {request.requestDate}</p>
+                </div>
+              </div>
+              <span className={`px-4 py-2 rounded-lg text-xs font-medium ${
+                request.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
+                request.status === 'Accepted' ? 'bg-blue-100 text-blue-800' : 
+                'bg-green-100 text-green-800'
+              }`}>
+                {request.status}
+              </span>
+            </div>
+            
+            <div className="border-t border-gray-100 pt-3 mt-3">
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="text-sm">
+                  <span className="text-gray-500">Blood Bag Units:</span>
+                  <span className="ml-2 font-medium">{request.units}</span>
+                </div>
+                <div className="text-sm">
+                  <span className="text-gray-500">Points Used:</span>
+                  <span className="ml-2 font-medium">{request.pointsUsed}</span>
+                </div>
+                <div className="text-sm">
+                  <span className="text-gray-500">Blood Type:</span>
+                  <span className="ml-2 font-medium text-red-600">{request.bloodType}</span>
+                </div>
+                {request.bloodBank && (
+                  <div className="text-sm col-span-1">
+                    <span className="text-gray-500">Blood Bank:</span>
+                    <span className="ml-2 font-medium">{request.bloodBank}</span>
+                  </div>
+                )}
+                {request.acceptedDate && (
+                  <div className="text-sm col-span-2">
+                    <span className="text-gray-500">Accepted Date:</span>
+                    <span className="ml-2 font-medium">{request.acceptedDate}</span>
+                  </div>
+                )}
+                {request.expiryDate && (
+                  <div className="text-sm col-span-2">
+                    <span className="text-gray-500">Valid Until:</span>
+                    <span className="ml-2 font-medium">{request.expiryDate}</span>
+                  </div>
+                )}
+                {request.completedDate && (
+                  <div className="text-sm col-span-2">
+                    <span className="text-gray-500">Completed Date:</span>
+                    <span className="ml-2 font-medium">{request.completedDate}</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="mt-4">
+                {request.status === 'Pending' && (
+                  <div className="text-sm text-gray-500 italic">Waiting for a blood bank to accept your request...</div>
+                )}
+                {request.status === 'Accepted' && (
+                  <button
+                    onClick={() => handlePrintVoucher(request)}
+                    className="w-full py-2 bg-blue-600 text-white rounded-md flex items-center justify-center"
+                  >
+                    <FiPrinter className="mr-2" /> Print Voucher
+                  </button>
+                )}
+                {request.status === 'Complete' && (
+                  <div className="text-center">
+                    <div className="text-sm text-green-600 font-medium">
+                      Blood bag voucher successfully redeemed
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-center py-12 bg-gray-50 rounded-xl">
+          <div className="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+            <FiPackage className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-gray-700 font-medium text-lg">No blood bag requests yet</h3>
+          <p className="text-gray-500 text-sm mt-2 max-w-sm mx-auto">
+            Convert your points to blood bag vouchers to see your requests here.
+          </p>
+          <button 
+            onClick={() => {
+              setActiveTab("available");
+              setShowVoucherModal(true);
+            }}
+            className="mt-4 px-5 py-2 bg-gradient-to-r from-[#C91C1C] to-[#FF5757] text-white rounded-lg text-sm font-medium hover:shadow-md">
+            Convert Points Now
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="relative">
@@ -134,6 +850,16 @@ const RewardsSystem = () => {
             onClick={() => setActiveTab("redeemed")}
           >
             Redeemed Rewards
+          </button>
+          <button
+            className={`px-4 py-2 md:px-5 md:py-3 font-medium text-sm whitespace-nowrap rounded-t-lg transition-colors ${
+              activeTab === "bloodBagRequests" 
+                ? "bg-red-50 text-red-600 border-b-2 border-red-600" 
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("bloodBagRequests")}
+          >
+            Blood Bag Requests
           </button>
           <button
             className={`px-4 py-2 md:px-5 md:py-3 font-medium text-sm whitespace-nowrap rounded-t-lg transition-colors ${
@@ -219,6 +945,8 @@ const RewardsSystem = () => {
             )}
           </div>
         )}
+
+        {activeTab === "bloodBagRequests" && renderBloodBagRequests()}
 
         {activeTab === "history" && (
           <div>
@@ -346,6 +1074,8 @@ const RewardsSystem = () => {
             </div>
           </div>
         )}
+
+        {showVoucherModal && renderVoucherConversionModal()}
       </div>
     </div>
   )
