@@ -21,6 +21,18 @@ import {
   FiChevronRight,
   FiDatabase
 } from 'react-icons/fi'
+import TrackDelivery from './TrackDelivery'
+import UpdateDelivery from './UpdateDelivery'
+import CreateDelivery from './CreateDelivery'
+import ViewRequests from './ViewRequests'
+
+// Delivery status constants
+const DELIVERY_STATUS = {
+  PENDING: 'Pending',
+  SCHEDULED: 'Scheduled',
+  IN_TRANSIT: 'In Transit',
+  COMPLETE: 'Complete'
+};
 
 export default function HospitalList() {
   const navigate = useNavigate()
@@ -28,6 +40,12 @@ export default function HospitalList() {
   const [filterStatus, setFilterStatus] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [mobileFilterVisible, setMobileFilterVisible] = useState(false)
+  const [selectedDelivery, setSelectedDelivery] = useState(null);
+  const [selectedHospital, setSelectedHospital] = useState(null);
+  const [showTrackModal, setShowTrackModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showRequestsModal, setShowRequestsModal] = useState(false);
 
   const hospitals = [
     {
@@ -128,11 +146,36 @@ export default function HospitalList() {
       status: "Pending",
       items: "O- (3 units), B- (2 units)",
       estimatedTime: "ASAP"
+    },
+    {
+      id: "DEL-1005",
+      hospital: "Pinecrest Medical Center",
+      date: "2023-08-15",
+      status: DELIVERY_STATUS.COMPLETE,
+      items: "A+ (2 units), B+ (3 units)",
+      estimatedTime: "Delivered at 2:45 PM"
+    },
+    {
+      id: "DEL-1006",
+      hospital: "Cityview Medical Center",
+      date: "2023-08-14",
+      status: DELIVERY_STATUS.COMPLETE,
+      items: "O+ (4 units), AB- (1 unit)",
+      estimatedTime: "Delivered at 11:20 AM"
+    },
+    {
+      id: "DEL-1007",
+      hospital: "Evergreen Medical Hospital",
+      date: "2023-08-13",
+      status: DELIVERY_STATUS.COMPLETE,
+      items: "B- (3 units), A- (2 units)",
+      estimatedTime: "Delivered at 4:30 PM"
     }
   ]
 
   const handleViewRequests = (hospital) => {
-    navigate('/requests', { state: { selectedHospital: hospital } })
+    setSelectedHospital(hospital);
+    setShowRequestsModal(true);
   }
 
   const handleCreateDelivery = (hospital) => {
@@ -204,6 +247,44 @@ export default function HospitalList() {
   const toggleMobileFilters = () => {
     setMobileFilterVisible(!mobileFilterVisible);
   }
+
+  // Track delivery handler
+  const handleTrackDelivery = (delivery) => {
+    setSelectedDelivery(delivery);
+    setShowTrackModal(true);
+  };
+  
+  // Update delivery handler
+  const handleUpdateDelivery = (delivery) => {
+    setSelectedDelivery(delivery);
+    setShowUpdateModal(true);
+  };
+  
+  // Update delivery status
+  const updateDeliveryStatus = (updatedDelivery) => {
+    // In a real app, this would call an API
+    // For demo, we'll update the state directly
+    const updatedDeliveries = deliveries.map(d => 
+      d.id === updatedDelivery.id ? updatedDelivery : d
+    );
+    
+    // This won't persist on refresh since it's just state
+    // In a real app, you'd update a database
+    console.log("Updated delivery:", updatedDelivery);
+    
+    // Show success notification (optional)
+    alert(`Delivery ${updatedDelivery.id} updated to ${updatedDelivery.status}`);
+  };
+
+  // Create new delivery
+  const createNewDelivery = (newDelivery) => {
+    // In a real app, this would call an API
+    // For demo, we'll just add it to the state
+    console.log("Created new delivery:", newDelivery);
+    
+    // Show success notification (optional)
+    alert(`Delivery ${newDelivery.id} has been created successfully!`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -373,9 +454,18 @@ export default function HospitalList() {
                       </button>
                       <button
                         onClick={() => handleCreateDelivery(hospital)}
-                        className="px-3 py-1.5 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-all shadow-sm flex items-center"
+                        disabled={hospital.deliveryStatus !== 'Pending'}
+                        className={`px-3 py-1.5 text-xs text-white ${
+                          hospital.deliveryStatus !== 'Pending' 
+                            ? 'bg-gray-400 cursor-not-allowed' 
+                            : 'bg-blue-500 hover:bg-blue-600'
+                        } rounded-lg transition-all shadow-sm flex items-center`}
                       >
-                        <FiTruck className="mr-1" /> Schedule
+                        <FiTruck className="mr-1" /> 
+                        {hospital.deliveryStatus === 'Scheduled' ? 'Delivery Scheduled' : 
+                         hospital.deliveryStatus === 'In Transit' ? 'Delivery In Transit' :
+                         hospital.deliveryStatus === 'Complete' ? 'Delivery Complete' :
+                         'Schedule Delivery'}
                       </button>
                     </div>
                   </div>
@@ -445,9 +535,18 @@ export default function HospitalList() {
                             </button>
                             <button
                               onClick={() => handleCreateDelivery(hospital)}
-                              className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm lg:text-base text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-all shadow-sm flex items-center"
+                              disabled={hospital.deliveryStatus !== 'Pending'}
+                              className={`px-3 py-1.5 lg:px-4 lg:py-2 text-sm lg:text-base text-white ${
+                                hospital.deliveryStatus !== 'Pending' 
+                                  ? 'bg-gray-400 cursor-not-allowed' 
+                                  : 'bg-blue-500 hover:bg-blue-600'
+                              } rounded-lg transition-all shadow-sm flex items-center`}
                             >
-                              <FiTruck className="mr-1.5 lg:mr-2 lg:w-5 lg:h-5" /> Schedule Delivery
+                              <FiTruck className="mr-1.5 lg:mr-2 lg:w-5 lg:h-5" /> 
+                              {hospital.deliveryStatus === 'Scheduled' ? 'Delivery Scheduled' : 
+                               hospital.deliveryStatus === 'In Transit' ? 'Delivery In Transit' :
+                               hospital.deliveryStatus === 'Complete' ? 'Delivery Complete' :
+                               'Schedule Delivery'}
                             </button>
                           </div>
                         </td>
@@ -468,53 +567,7 @@ export default function HospitalList() {
 
         {activeTab === 'deliveries' && (
           <>
-            {/* Enhanced Stats Cards for Desktop */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-6 mb-8">              
-              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-xl shadow-sm hover:shadow-lg cursor-pointer transition-all flex items-center border-l-4 border-yellow-500">
-                <div className="p-2 sm:p-3 lg:p-4 rounded-full bg-yellow-100 mr-3 sm:mr-4">
-                  <FiPackage className="text-yellow-600 text-lg sm:text-xl lg:text-2xl" />
-                </div>
-                <div>
-                  <div className="text-xs sm:text-sm lg:text-base text-gray-500 font-medium">Pending</div>
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
-                    {deliveries.filter(d => d.status === 'Pending').length}
-                  </div>
-                </div>
-                <div className="ml-auto hidden lg:flex">
-                  <FiChevronRight className="text-gray-400 w-6 h-6" />
-                </div>
-              </div>
-              
-              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-xl shadow-sm hover:shadow-lg cursor-pointer transition-all flex items-center border-l-4 border-blue-500">
-                <div className="p-2 sm:p-3 lg:p-4 rounded-full bg-blue-100 mr-3 sm:mr-4">
-                  <FiTruck className="text-blue-600 text-lg sm:text-xl lg:text-2xl" />
-                </div>
-                <div>
-                  <div className="text-xs sm:text-sm lg:text-base text-gray-500 font-medium">In Transit</div>
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
-                    {deliveries.filter(d => d.status === 'In Transit').length}
-                  </div>
-                </div>
-                <div className="ml-auto hidden lg:flex">
-                  <FiChevronRight className="text-gray-400 w-6 h-6" />
-                </div>
-              </div>
-              
-              <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-xl shadow-sm hover:shadow-lg cursor-pointer transition-all flex items-center border-l-4 border-purple-500">
-                <div className="p-2 sm:p-3 lg:p-4 rounded-full bg-purple-100 mr-3 sm:mr-4">
-                  <FiCalendar className="text-purple-600 text-lg sm:text-xl lg:text-2xl" />
-                </div>
-                <div>
-                  <div className="text-xs sm:text-sm lg:text-base text-gray-500 font-medium">Scheduled</div>
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
-                    {deliveries.filter(d => d.status === 'Scheduled').length}
-                  </div>
-                </div>
-                <div className="ml-auto hidden lg:flex">
-                  <FiChevronRight className="text-gray-400 w-6 h-6" />
-                </div>
-              </div>
-            </div>
+           
             
             
             
@@ -524,11 +577,11 @@ export default function HospitalList() {
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold flex items-center text-gray-800">
                   <FiTruck className="mr-2 lg:mr-3 text-[#C91C1C] lg:w-6 lg:h-6" /> Manage Blood Deliveries
                 </h2>
-                <button 
-                  onClick={() => navigate('/schedule')}
-                  className="flex items-center text-xs sm:text-sm lg:text-base text-white bg-[#C91C1C] hover:bg-[#b01818] px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 lg:py-2.5 rounded-lg transition-all shadow-sm lg:shadow-md"
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm lg:text-base bg-[#C91C1C] text-white rounded-lg hover:bg-[#b01818] transition-all flex items-center shadow-sm"
                 >
-                  <FiPlus className="mr-1 sm:mr-1.5 lg:mr-2 lg:w-5 lg:h-5" /> New Delivery
+                  <FiPlus className="mr-1.5 w-3.5 h-3.5 lg:w-4 lg:h-4" /> New Delivery
                 </button>
               </div>
               
@@ -578,16 +631,13 @@ export default function HospitalList() {
                     <div className="flex justify-end space-x-2">
                       <button 
                         className="px-3 py-1.5 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center shadow-sm"
-                        onClick={() => navigate('/schedule', { state: { delivery } })}
+                        onClick={() => handleTrackDelivery(delivery)}
                       >
                         <FiEye className="mr-1 w-3 h-3" /> Track
                       </button>
                       <button 
                         className="px-3 py-1.5 text-xs bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all flex items-center shadow-sm"
-                        onClick={() => {
-                          // Update status logic would go here
-                          alert(`Update status for ${delivery.id}`);
-                        }}
+                        onClick={() => handleUpdateDelivery(delivery)}
                       >
                         <FiArrowRight className="mr-1 w-3 h-3" /> Update
                       </button>
@@ -649,16 +699,13 @@ export default function HospitalList() {
                             <div className="flex justify-center space-x-2 lg:space-x-3 opacity-90 group-hover:opacity-100">
                               <button 
                                 className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm lg:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center shadow-sm lg:shadow-md"
-                                onClick={() => navigate('/schedule', { state: { delivery } })}
+                                onClick={() => handleTrackDelivery(delivery)}
                               >
                                 <FiEye className="mr-1.5 w-3.5 h-3.5 lg:w-4 lg:h-4" /> Track
                               </button>
                               <button 
                                 className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm lg:text-base bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all flex items-center shadow-sm lg:shadow-md"
-                                onClick={() => {
-                                  // Update status logic would go here
-                                  alert(`Update status for ${delivery.id}`);
-                                }}
+                                onClick={() => handleUpdateDelivery(delivery)}
                               >
                                 <FiArrowRight className="mr-1.5 w-3.5 h-3.5 lg:w-4 lg:h-4" /> Update
                               </button>
@@ -678,18 +725,44 @@ export default function HospitalList() {
               </div>
             </div>
             
-            {/* Enhanced action button */}
-            <div className="flex justify-center">
-              <button 
-                onClick={() => navigate('/schedule')}
-                className="bg-[#C91C1C] text-white py-2 sm:py-3 lg:py-4 px-6 sm:px-8 lg:px-10 rounded-xl font-bold hover:bg-[#b01818] transition-all flex items-center shadow-md text-sm sm:text-base lg:text-lg"
-              >
-                <FiTruck className="mr-1.5 sm:mr-2 lg:mr-3 lg:w-6 lg:h-6" /> Schedule New Delivery
-              </button>
-            </div>
+            
           </>
         )}
       </main>
+      
+      {/* Track Delivery Modal */}
+      {showTrackModal && selectedDelivery && (
+        <TrackDelivery 
+          delivery={selectedDelivery} 
+          onClose={() => setShowTrackModal(false)} 
+        />
+      )}
+      
+      {/* Update Delivery Modal */}
+      {showUpdateModal && selectedDelivery && (
+        <UpdateDelivery 
+          delivery={selectedDelivery} 
+          onClose={() => setShowUpdateModal(false)}
+          onUpdate={updateDeliveryStatus}
+        />
+      )}
+      
+      {/* Create Delivery Modal */}
+      {showCreateModal && (
+        <CreateDelivery 
+          onClose={() => setShowCreateModal(false)}
+          onCreateDelivery={createNewDelivery}
+        />
+      )}
+      
+      {/* View Requests Modal */}
+      {showRequestsModal && selectedHospital && (
+        <ViewRequests 
+          hospital={selectedHospital} 
+          onClose={() => setShowRequestsModal(false)}
+        />
+      )}
+      
     </div>
   );
 }

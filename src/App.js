@@ -20,6 +20,8 @@ import NewRequest from './components/Hospital/NewRequest';
 import SuccessfulRequest from './components/Hospital/SuccessfulRequest';
 import RequestDetails from './components/Hospital/RequestDetails';
 import HospitalProfile from './components/Hospital/Profile';
+import DonationList from './components/Hospital/DonationList';
+import HospitalInventory from './components/Hospital/HospitalInventory';
 
 import { Layout } from './components/Layout';
 import DonorProfile from './components/Donor/Profile';
@@ -36,6 +38,7 @@ import RequestSheet from './components/RedsourceAdmin/RequestSheet';
 import AdminProfile from './components/RedsourceAdmin/Profile';
 import UpcomingDeliveries from './components/Hospital/UpcomingDeliveries';
 import Inventory from './components/RedsourceAdmin/Inventory';
+import AdminDonationList from './components/RedsourceAdmin/AdminDonationList';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -154,6 +157,8 @@ function App() {
                     <Route path="/welcome-message" element={<WelcomeMessage />} /> 
                     <Route path="/profile-page" element={<HospitalProfile />} />
                     <Route path="/Track-Deliveries" element={<UpcomingDeliveries />} />
+                    <Route path="/donation-list" element={<DonationList />} />
+                    <Route path="/hospital-inventory" element={<HospitalInventory />} />
                   </>
                 )}
 
@@ -166,6 +171,7 @@ function App() {
                     <Route path="/request-sheet" element={<RequestSheet />} />
                     <Route path="/profile-page" element={<AdminProfile />} />
                     <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/list-of-donation" element={<AdminDonationList />} />
                   </>
                 )}
               </>

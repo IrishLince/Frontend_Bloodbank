@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, UserCircle2, Settings, LogOut, User, Mail, Home, Calendar, Info, List } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import logo from '../assets/Logo.png';
-import RefreshLink from './RefreshLink';
-import { navigateWithRefresh } from '../utils/navigation';
+"use client"
+
+import { useState, useEffect } from "react"
+import { Menu, X, UserCircle2, Settings, LogOut, User, Mail, Home, Calendar, Info, List } from "lucide-react"
+import { useLocation, useNavigate } from "react-router-dom"
+import logo from "../assets/Logo.png"
+import RefreshLink from "./RefreshLink"
+import { navigateWithRefresh } from "../utils/navigation"
 
 const ProfileDropdown = ({ onLogout, userData }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && !event.target.closest('.profile-dropdown')) {
-        setIsOpen(false);
+      if (isOpen && !event.target.closest(".profile-dropdown")) {
+        setIsOpen(false)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [isOpen])
 
   return (
     <div className="relative profile-dropdown z-40">
@@ -82,8 +84,8 @@ const ProfileDropdown = ({ onLogout, userData }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 const NavLink = ({ to, children, isAuthenticated, isActive, icon }) => {
   return (
@@ -91,120 +93,241 @@ const NavLink = ({ to, children, isAuthenticated, isActive, icon }) => {
       to={to}
       className={`
         px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2
-        ${isAuthenticated
-          ? isActive
-            ? "bg-white text-red-600 font-semibold"
-            : "text-white hover:bg-white/20"
-          : isActive
-            ? "bg-white text-red-600 font-semibold"
-            : "text-white hover:bg-white/20"
+        ${
+          isAuthenticated
+            ? isActive
+              ? "bg-white text-red-600 font-semibold"
+              : "text-white hover:bg-white/20"
+            : isActive
+              ? "bg-white text-red-600 font-semibold"
+              : "text-white hover:bg-white/20"
         }
       `}
     >
       {icon}
       <span>{children}</span>
     </RefreshLink>
-  );
-};
+  )
+}
 
 const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState('');
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollPos, setLastScrollPos] = useState(0);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userRole, setUserRole] = useState("")
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollPos, setLastScrollPos] = useState(0)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
-      const isScrollingUp = currentScrollPos < lastScrollPos;
-      const isAtTop = currentScrollPos === 0;
-      
-      setIsVisible(isScrollingUp || isAtTop);
-      setLastScrollPos(currentScrollPos);
-    };
+      const currentScrollPos = window.scrollY
+      const isScrollingUp = currentScrollPos < lastScrollPos
+      const isAtTop = currentScrollPos === 0
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollPos]);
+      setIsVisible(isScrollingUp || isAtTop)
+      setLastScrollPos(currentScrollPos)
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [lastScrollPos])
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem('userToken');
-      const role = localStorage.getItem('userRole');
-      setIsAuthenticated(!!token);
-      setUserRole(role || '');
-    };
+      const token = localStorage.getItem("userToken")
+      const role = localStorage.getItem("userRole")
+      setIsAuthenticated(!!token)
+      setUserRole(role || "")
+    }
 
-    checkAuth();
-    window.addEventListener('storage', checkAuth);
+    checkAuth()
+    window.addEventListener("storage", checkAuth)
 
     return () => {
-      window.removeEventListener('storage', checkAuth);
-    };
-  }, []);
+      window.removeEventListener("storage", checkAuth)
+    }
+  }, [])
 
   useEffect(() => {
     const handlePopState = () => {
-      const token = localStorage.getItem('userToken');
-      const role = localStorage.getItem('userRole');
-      setIsAuthenticated(!!token);
-      setUserRole(role || '');
-    };
+      const token = localStorage.getItem("userToken")
+      const role = localStorage.getItem("userRole")
+      setIsAuthenticated(!!token)
+      setUserRole(role || "")
+    }
 
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener("popstate", handlePopState)
     return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, []);
+      window.removeEventListener("popstate", handlePopState)
+    }
+  }, [])
 
-  const hideHeaderPaths = ['/login', '/signup', '/forgot-password'];
+  const hideHeaderPaths = ["/login", "/signup", "/forgot-password"]
   if (hideHeaderPaths.includes(location.pathname)) {
-    return null;
+    return null
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('username');
-    localStorage.removeItem('email');
-    localStorage.removeItem('userRole');
-    setIsAuthenticated(false);
-    setUserRole('');
-    navigateWithRefresh('/homepage');
-  };
+    localStorage.removeItem("userToken")
+    localStorage.removeItem("username")
+    localStorage.removeItem("email")
+    localStorage.removeItem("userRole")
+    setIsAuthenticated(false)
+    setUserRole("")
+    navigateWithRefresh("/homepage")
+  }
 
   const Donor = () => (
     <>
-      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} isActive={location.pathname === '/successful-login'} icon={<Home className="w-5 h-5" />}>Home</NavLink>
-      <NavLink to="/donation-center" isAuthenticated={isAuthenticated} isActive={location.pathname === '/donation-center'} icon={<Calendar className="w-5 h-5" />}>Online Booking</NavLink>
-      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'} icon={<Info className="w-5 h-5" />}>About Us</NavLink>
+      <NavLink
+        to="/successful-login"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/successful-login"}
+        icon={<Home className="w-5 h-5" />}
+      >
+        Home
+      </NavLink>
+      <NavLink
+        to="/donation-center"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/donation-center"}
+        icon={<Calendar className="w-5 h-5" />}
+      >
+        Online Booking
+      </NavLink>
+      <NavLink
+        to="/about-us"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/about-us"}
+        icon={<Info className="w-5 h-5" />}
+      >
+        About Us
+      </NavLink>
     </>
-  );
+  )
 
   const HospitalAdmin = () => (
     <>
-      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} isActive={location.pathname === '/successful-login'} icon={<Home className="w-5 h-5" />}>Home</NavLink>
-      <NavLink to="/hospital" isAuthenticated={isAuthenticated} isActive={location.pathname === '/hospital'} icon={<Calendar className="w-5 h-5" />}>Requests</NavLink>
-      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'} icon={<Info className="w-5 h-5" />}>About Us</NavLink>
+      <NavLink
+        to="/successful-login"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/successful-login"}
+        icon={<Home className="w-5 h-5" />}
+      >
+        Home
+      </NavLink>
+      <NavLink
+        to="/hospital"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/hospital"}
+        icon={<Calendar className="w-5 h-5" />}
+      >
+        Requests
+      </NavLink>
+      <NavLink
+        to="/donation-list"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/donation-list"}
+        icon={<List className="w-5 h-5" />}
+      >
+        List of Donation
+      </NavLink>
+      <NavLink
+        to="/hospital-inventory"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/hospital-inventory"}
+        icon={<Calendar className="w-5 h-5" />}
+      >
+        Inventory
+      </NavLink>
+      <NavLink
+        to="/about-us"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/about-us"}
+        icon={<Info className="w-5 h-5" />}
+      >
+        About Us
+      </NavLink>
     </>
-  );
+  )
 
   const BloodBankAdmin = () => (
     <>
-      <NavLink to="/successful-login" isAuthenticated={isAuthenticated} isActive={location.pathname === '/successful-login'} icon={<Home className="w-5 h-5" />}>Home</NavLink>
-      <NavLink to="/hospital" isAuthenticated={isAuthenticated} isActive={location.pathname === '/hospital'} icon={<List className="w-5 h-5" />}>Hospital</NavLink>
-      <NavLink to="/inventory" isAuthenticated={isAuthenticated} isActive={location.pathname === '/inventory'} icon={<Calendar className="w-5 h-5" />}>Inventory</NavLink>
-      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'} icon={<Info className="w-5 h-5" />}>About Us</NavLink>
+      <NavLink
+        to="/successful-login"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/successful-login"}
+        icon={<Home className="w-5 h-5" />}
+      >
+        Home
+      </NavLink>
+      <NavLink
+        to="/hospital"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/hospital"}
+        icon={<List className="w-5 h-5" />}
+      >
+        Hospital
+      </NavLink>
+      
+      <NavLink
+        to="/List-of-Donation"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/List-of-Donation"}
+        icon={<List className="w-5 h-5" />}
+      >
+        List of Donation
+      </NavLink>
+
+      <NavLink
+        to="/inventory"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/inventory"}
+        icon={<Calendar className="w-5 h-5" />}
+      >
+        Inventory
+      </NavLink>
+
+      
+
+      <NavLink
+        to="/about-us"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/about-us"}
+        icon={<Info className="w-5 h-5" />}
+      >
+        About Us
+      </NavLink>
     </>
-  );
+  )
 
   const LoggedOutLinks = () => (
     <>
-      <NavLink to="/homepage" isAuthenticated={isAuthenticated} isActive={location.pathname === '/homepage'} icon={<Home className="w-5 h-5" />}>Home</NavLink>
-      <NavLink to="/faqs" isAuthenticated={isAuthenticated} isActive={location.pathname === '/faqs'} icon={<Info className="w-5 h-5" />}>FAQs</NavLink>
-      <NavLink to="/about-us" isAuthenticated={isAuthenticated} isActive={location.pathname === '/about-us'} icon={<Info className="w-5 h-5" />}>About Us</NavLink>
+      <NavLink
+        to="/homepage"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/homepage"}
+        icon={<Home className="w-5 h-5" />}
+      >
+        Home
+      </NavLink>
+      <NavLink
+        to="/faqs"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/faqs"}
+        icon={<Info className="w-5 h-5" />}
+      >
+        FAQs
+      </NavLink>
+      <NavLink
+        to="/about-us"
+        isAuthenticated={isAuthenticated}
+        isActive={location.pathname === "/about-us"}
+        icon={<Info className="w-5 h-5" />}
+      >
+        About Us
+      </NavLink>
       <div className="flex gap-2">
         <RefreshLink
           to="/signup"
@@ -220,20 +343,20 @@ const Header = () => {
         </RefreshLink>
       </div>
     </>
-  );
+  )
 
   const userData = {
-    username: localStorage.getItem('username') || 'User',
-    email: localStorage.getItem('email') || 'user@example.com',
-  };
+    username: localStorage.getItem("username") || "User",
+    email: localStorage.getItem("email") || "user@example.com",
+  }
 
   return (
-    <header 
+    <header
       className={`
         fixed top-0 left-0 w-full
         z-50 
         transition-all duration-300 
-        ${isVisible ? 'translate-y-0' : '-translate-y-full'}
+        ${isVisible ? "translate-y-0" : "-translate-y-full"}
         bg-red-600
         shadow-lg
         h-16
@@ -242,17 +365,27 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-shrink-0">
-            <RefreshLink to={isAuthenticated ? '/successful-login' : '/homepage'}>
+            <RefreshLink to={isAuthenticated ? "/successful-login" : "/homepage"}>
               <div className="w-10 h-10 flex items-center justify-center">
-                <img src={logo} alt="Logo" className="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition-opacity" />
+                <img
+                  src={logo || "/placeholder.svg"}
+                  alt="Logo"
+                  className="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition-opacity"
+                />
               </div>
             </RefreshLink>
           </div>
 
           <nav className="hidden md:flex items-center space-x-2">
-            {!isAuthenticated ? <LoggedOutLinks /> : 
-             userRole === 'BloodBankAdmin' ? <BloodBankAdmin /> :
-             userRole === 'Hospital' ? <HospitalAdmin /> : <Donor />}
+            {!isAuthenticated ? (
+              <LoggedOutLinks />
+            ) : userRole === "BloodBankAdmin" ? (
+              <BloodBankAdmin />
+            ) : userRole === "Hospital" ? (
+              <HospitalAdmin />
+            ) : (
+              <Donor />
+            )}
           </nav>
 
           {isAuthenticated && (
@@ -266,20 +399,22 @@ const Header = () => {
             className="md:hidden rounded-lg p-2 hover:bg-red-700 transition-colors duration-300"
             aria-label="Toggle menu"
           >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6 text-white" />
-            ) : (
-              <Menu className="h-6 w-6 text-white" />
-            )}
+            {isMobileMenuOpen ? <X className="h-6 w-6 text-white" /> : <Menu className="h-6 w-6 text-white" />}
           </button>
         </div>
 
         {isMobileMenuOpen && (
           <div className="md:hidden bg-red-600 border-t border-red-700">
             <nav className="flex flex-col space-y-1 px-2 pb-3 pt-2">
-              {!isAuthenticated ? <LoggedOutLinks /> : 
-               userRole === 'BloodBankAdmin' ? <BloodBankAdmin /> :
-               userRole === 'Hospital' ? <HospitalAdmin /> : <Donor />}
+              {!isAuthenticated ? (
+                <LoggedOutLinks />
+              ) : userRole === "BloodBankAdmin" ? (
+                <BloodBankAdmin />
+              ) : userRole === "Hospital" ? (
+                <HospitalAdmin />
+              ) : (
+                <Donor />
+              )}
               {isAuthenticated && (
                 <button
                   onClick={handleLogout}
@@ -294,7 +429,7 @@ const Header = () => {
         )}
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

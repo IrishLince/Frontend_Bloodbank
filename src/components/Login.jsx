@@ -43,7 +43,7 @@ const Login = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
       navigateWithRefresh('/successful-login');
     }
-    else if (username === 'RedsourceAdmin' && password === '12345') {
+    else if (username === 'BloodBankAdmin' && password === '12345') {
       localStorage.setItem('userToken', 'bloodbank-admin-token');
       localStorage.setItem('username', username);
       localStorage.setItem('email', 'admin@bloodbank.com');

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { ArrowLeft, Mail, Phone, MapPin, Shield, Eye, EyeOff, User, Pencil, Clock } from "lucide-react"
+import { ArrowLeft, Mail, Phone, MapPin, Shield, Eye, EyeOff, User, Pencil, Clock, CheckCircle } from "lucide-react"
 import Header from "../Header"
 
 const ProfileManagement = () => {
@@ -12,7 +12,61 @@ const ProfileManagement = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [confirmText, setConfirmText] = useState("")
   const [isMobile, setIsMobile] = useState(false)
+  const [userData, setUserData] = useState({
+    fullName: "REDSOURCE ADMIN",
+    email: "admin@redsource.org",
+    phone: "+63 2 1234 5678",
+    address: "Red Cross Building, Bonifacio Drive, Port Area, Manila",
+    role: "Super Administrator",
+    adminId: "ADMIN-001",
+    status: "Active"
+  })
   const navigate = useNavigate()
+
+  // Add state for form data
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    address: ""
+  });
+  
+  // Add state for showing success message
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = () => {
+      try {
+        // Try to get user data from localStorage
+        const storedUser = localStorage.getItem('userData');
+        
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          const updatedUserData = {
+            ...userData,
+            fullName: parsedUser.fullName || parsedUser.name || userData.fullName,
+            email: parsedUser.email || userData.email,
+            phone: parsedUser.phone || userData.phone,
+            adminId: parsedUser.adminId || parsedUser.id || userData.adminId,
+            // Keep other defaults if not provided
+          };
+          
+          setUserData(updatedUserData);
+          setFormData({
+            fullName: updatedUserData.fullName,
+            email: updatedUserData.email,
+            phone: updatedUserData.phone,
+            address: updatedUserData.address
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+    
+    fetchUserData();
+  }, []);
 
   // Check if the screen is mobile size on load and when resized
   useEffect(() => {
@@ -32,6 +86,55 @@ const ProfileManagement = () => {
     };
   }, []);
 
+  // Handle input changes in the edit form
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    try {
+      // Get existing user data
+      const existingData = JSON.parse(localStorage.getItem('userData') || '{}');
+      
+      // Update with new form data
+      const updatedUserData = {
+        ...existingData,
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address
+      };
+      
+      // Save back to localStorage
+      localStorage.setItem('userData', JSON.stringify(updatedUserData));
+      
+      // Update state
+      setUserData(prev => ({
+        ...prev,
+        ...formData
+      }));
+      
+      // Show success message
+      setShowSuccess(true);
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+        setView("profile");
+      }, 3000);
+      
+    } catch (error) {
+      console.error("Failed to save user data:", error);
+    }
+  };
+
   const renderProfile = () => (
     <div className="relative bg-gray-50 min-h-screen w-full max-w-full overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 pt-4 sm:pt-6">
@@ -48,10 +151,10 @@ const ProfileManagement = () => {
             
             {/* Admin Info & Tags */}
             <div className="text-center sm:text-left flex-1">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight">REDSOURCE ADMIN</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight">{userData.fullName}</h2>
               <div className="flex flex-wrap justify-center sm:justify-start gap-2 mt-2 sm:mt-3">
                 <span className="bg-white/20 text-white text-xs sm:text-sm px-3 py-1 rounded-full backdrop-blur-sm">
-                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" /> Super Administrator
+                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" /> {userData.role}
                 </span>
                 <span className="bg-white/20 text-white text-xs sm:text-sm px-3 py-1 rounded-full backdrop-blur-sm">
                   <Clock className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" /> Active since 2020
@@ -90,7 +193,7 @@ const ProfileManagement = () => {
                 <p className="text-sm text-gray-500 uppercase mb-1">Email</p>
                 <div className="flex items-center">
                   <Mail className="w-4 h-4 mr-2 text-red-600" />
-                  <span className="font-medium">admin@redsource.org</span>
+                  <span className="font-medium">{userData.email}</span>
                 </div>
               </div>
               
@@ -98,13 +201,13 @@ const ProfileManagement = () => {
                 <p className="text-sm text-gray-500 uppercase mb-1">Phone</p>
                 <div className="flex items-center">
                   <Phone className="w-4 h-4 mr-2 text-red-600" />
-                  <span className="font-medium">+63 2 1234 5678</span>
+                  <span className="font-medium">{userData.phone}</span>
                 </div>
               </div>
               
               <div className="mb-5">
                 <p className="text-sm text-gray-500 uppercase mb-1">Admin ID</p>
-                <span className="font-medium">ADMIN-001</span>
+                <span className="font-medium">{userData.adminId}</span>
               </div>
             </div>
             
@@ -113,7 +216,7 @@ const ProfileManagement = () => {
                 <p className="text-sm text-gray-500 uppercase mb-1">Address</p>
                 <div className="flex items-start">
                   <MapPin className="w-4 h-4 mr-2 text-red-600 mt-0.5 flex-shrink-0" />
-                  <span className="font-medium">Red Cross Building, Bonifacio Drive, Port Area, Manila</span>
+                  <span className="font-medium">{userData.address}</span>
                 </div>
               </div>
               
@@ -121,13 +224,13 @@ const ProfileManagement = () => {
                 <p className="text-sm text-gray-500 uppercase mb-1">Role</p>
                 <div className="flex items-center">
                   <Shield className="w-4 h-4 mr-2 text-red-600" />
-                  <span className="font-medium">Super Administrator</span>
+                  <span className="font-medium">{userData.role}</span>
                 </div>
               </div>
               
               <div className="mb-5">
                 <p className="text-sm text-gray-500 uppercase mb-1">Status</p>
-                <span className="font-medium text-green-600">Active</span>
+                <span className="font-medium text-green-600">{userData.status}</span>
               </div>
             </div>
           </div>
@@ -148,8 +251,16 @@ const ProfileManagement = () => {
           <h1 className="text-center flex-1 font-bold mr-8 sm:mr-12 text-base sm:text-lg">Edit Admin Details</h1>
         </div>
 
+        {/* Success Message */}
+        {showSuccess && (
+          <div className="bg-green-50 p-3 text-green-800 flex items-center">
+            <CheckCircle className="w-5 h-5 mr-2" />
+            <span>Profile updated successfully!</span>
+          </div>
+        )}
+
         {/* Form */}
-        <form className="p-4 sm:p-6 overflow-x-hidden">
+        <form className="p-4 sm:p-6 overflow-x-hidden" onSubmit={handleSubmit}>
           {/* Admin Details Section */}
           <div className="mb-6 sm:mb-8">
             <h2 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-gray-800 flex items-center">
@@ -162,7 +273,9 @@ const ProfileManagement = () => {
                 <label className="block text-sm font-medium text-gray-700">Full Name</label>
                 <input
                   type="text"
-                  defaultValue="RedSource Administrator"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
                   className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-shadow"
                 />
               </div>
@@ -171,7 +284,7 @@ const ProfileManagement = () => {
                 <label className="block text-sm font-medium text-gray-700">Admin ID</label>
                 <input
                   type="text"
-                  defaultValue="ADMIN-001"
+                  defaultValue={userData.adminId}
                   className="w-full p-2 sm:p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed text-sm"
                   disabled
                 />
@@ -182,7 +295,9 @@ const ProfileManagement = () => {
                 <label className="block text-sm font-medium text-gray-700">Contact Number</label>
                 <input
                   type="tel"
-                  defaultValue="+63 2 1234 5678"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
                   className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-shadow"
                 />
               </div>
@@ -191,7 +306,9 @@ const ProfileManagement = () => {
                 <label className="block text-sm font-medium text-gray-700">Email Address</label>
                 <input
                   type="email"
-                  defaultValue="admin@redsource.org"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-shadow"
                 />
               </div>
@@ -200,7 +317,9 @@ const ProfileManagement = () => {
                 <label className="block text-sm font-medium text-gray-700">Office Address</label>
                 <input
                   type="text"
-                  defaultValue="Red Cross Building, Bonifacio Drive, Port Area, Manila"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
                   className="w-full p-2 sm:p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-shadow"
                 />
               </div>
@@ -209,7 +328,7 @@ const ProfileManagement = () => {
                 <label className="block text-sm font-medium text-gray-700">Role</label>
                 <input
                   type="text"
-                  defaultValue="Super Administrator"
+                  defaultValue={userData.role}
                   className="w-full p-2 sm:p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed text-sm"
                   disabled
                 />
